@@ -1,6 +1,6 @@
-<?php namespace professionalweb\payment\drivers;
+<?php namespace professionalweb\payonline\drivers;
 
-use professionalweb\payment\contracts\PayService;
+use professionalweb\payonline\contracts\PayService;
 
 require_once 'PayOnline.php';
 
