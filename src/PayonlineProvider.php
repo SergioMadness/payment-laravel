@@ -1,8 +1,8 @@
-<?php namespace professionalweb\payonline;
+<?php namespace professionalweb\payment;
 
 use Illuminate\Support\ServiceProvider;
-use professionalweb\payonline\contracts\PayService;
-use professionalweb\payonline\drivers\PayOnlineDriver;
+use professionalweb\payment\contracts\PayService;
+use professionalweb\payment\drivers\payonline\PayOnlineDriver;
 
 /**
  * PayOnline payment provider
@@ -30,7 +30,7 @@ class PaymentProvider extends ServiceProvider
         $this->app->singleton(PayOnlineDriver::class, function ($app) {
             return new PayOnlineDriver(config('payonline'));
         });
-        $this->app->singleton('\professionalweb\payonline\PayOnline', function ($app) {
+        $this->app->singleton('\professionalweb\payment\PayOnline', function ($app) {
             return new PayOnlineDriver(config('payonline'));
         });
     }
@@ -42,6 +42,6 @@ class PaymentProvider extends ServiceProvider
      */
     public function provides()
     {
-        return [PayService::class, PayOnlineDriver::class, '\professionalweb\payonline\PayOnline'];
+        return [PayService::class, PayOnlineDriver::class, '\professionalweb\payment\PayOnline'];
     }
 }

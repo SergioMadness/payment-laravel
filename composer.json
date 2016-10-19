@@ -1,7 +1,7 @@
 {
-  "name": "professionalweb/payonline-laravel",
+  "name": "professionalweb/payment-laravel",
   "version": "1.0",
-  "description": "'PayOnline' payment system driver for laravel",
+  "description": "Payment drivers for laravel",
   "homepage": "http://web-development.pw/",
   "keywords": [
     "pwf",
@@ -10,6 +10,7 @@
     "composer",
     "payment system",
     "payonline",
+    "tinkoff",
     "laravel"
   ],
   "minimum-stability": "stable",
@@ -40,7 +41,7 @@
   },
   "autoload": {
     "psr-4": {
-      "professionalweb\\payonline\\": "src/"
+      "professionalweb\\payment\\": "src/"
     }
   }
 }

@@ -1,4 +1,4 @@
-<?php namespace professionalweb\payonline\contracts;
+<?php namespace professionalweb\payment\contracts;
 
 interface PayService
 {
