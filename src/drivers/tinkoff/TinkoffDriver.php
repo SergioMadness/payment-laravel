@@ -1,21 +1,21 @@
-<?php namespace professionalweb\payment\drivers\payonline;
+<?php namespace professionalweb\payment\drivers\tinkoff;
+
+require_once 'TinkoffMerchantAPI.php';
 
 use professionalweb\payment\contracts\PayService;
-
-require_once 'PayOnline.php';
 
 /**
  * Payment service. Pay, Check, etc
  * @package AlpinaDigital\Services
  */
-class PayOnlineDriver implements PayService
+class TinkoffDriver implements PayService
 {
     /**
-     * Payonline object
+     * TinkoffMerchantAPI object
      *
-     * @var \PayOnline
+     * @var \TinkoffMerchantAPI
      */
-    private $payonline;
+    private $tinkoffClass;
 
     /**
      * Module config
@@ -26,7 +26,7 @@ class PayOnlineDriver implements PayService
 
     public function __construct($config)
     {
-        $this->setConfig($config)->setPayonline(new \PayOnline($config['merchantId'], $config['secretKey']));
+        $this->setConfig($config)->setTinkoffClass(new \TinkoffMerchantAPI($config['merchantId'], $config['secretKey'], $config['apiUrl']));
     }
 
     /**
@@ -35,7 +35,7 @@ class PayOnlineDriver implements PayService
      * @param int    $orderId
      * @param int    $paymentId
      * @param float  $amount
-     * @param string $currency
+     * @param int    $currency
      * @param string $successReturnUrl
      * @param string $failReturnUrl
      * @param string $description
@@ -45,28 +45,34 @@ class PayOnlineDriver implements PayService
     public function getPaymentLink($orderId,
                                    $paymentId,
                                    $amount,
-                                   $currency = self::CURRENCY_RUR,
+                                   $currency = self::CURRENCY_RUR_ISO,
                                    $successReturnUrl = '',
                                    $failReturnUrl = '',
                                    $description = '')
     {
         if (empty($successReturnUrl)) {
-            $successReturnUrl = $this->getConfig()['successURL'];
+            $failReturnUrl = $this->getConfig()['successURL'];
         }
         if (empty($failReturnUrl)) {
             $failReturnUrl = $this->getConfig()['failURL'];
         }
         $data = [
-            'OrderId'          => $orderId,
-            'Amount'           => number_format(round($amount, 2), 2, '.', ''),
-            'Currency'         => $currency,
-            'OrderDescription' => $description,
-            'PaymentId'        => $paymentId,
-            'ReturnUrl'        => $successReturnUrl,
-            'FailUrl'          => $failReturnUrl,
+            'OrderId'     => $orderId,
+            'Amount'      => round($amount * 100),
+            'Currency'    => $currency,
+            'Description' => $description,
+            'DATA'        => 'PaymentId=' . $paymentId,
+            'ReturnUrl'   => $successReturnUrl,
+            'FailUrl'     => $failReturnUrl,
         ];
+        $driver = $this->getTinkoffClass();
+        $driver->init($data);
 
-        return $this->getPayonline()->getUrl($data);
+        if (!empty($driver->error)) {
+            throw new \Exception($driver->error);
+        }
+
+        return $driver->paymentUrl;
     }
 
     /**
@@ -80,7 +86,7 @@ class PayOnlineDriver implements PayService
     {
         $result = false;
 
-        if (isset($data['SecurityKey']) && $this->getPayonline()->getSecurityKey('callback', $data) == $data['SecurityKey']) {
+        if (isset($data['Token']) && $this->getTinkoffClass()->genToken($data) == $data['Token']) {
             $result = true;
         }
 
@@ -88,25 +94,25 @@ class PayOnlineDriver implements PayService
     }
 
     /**
-     * Get payonline object
+     * Get TinkoffMerchantAPI object
      *
-     * @return \PayOnline
+     * @return \TinkoffMerchantAPI
      */
-    public function getPayonline()
+    public function getTinkoffClass()
     {
-        return $this->payonline;
+        return $this->tinkoffClass;
     }
 
     /**
-     * Set Payonline object
+     * Set TinkoffMerchantAPI object
      *
-     * @param \PayOnline $payonline
+     * @param \TinkoffMerchantAPI $tinkoff
      *
      * @return $this
      */
-    public function setPayonline($payonline)
+    public function setTinkoffClass($tinkoff)
     {
-        $this->payonline = $payonline;
+        $this->tinkoffClass = $tinkoff;
 
         return $this;
     }

@@ -2,13 +2,14 @@
 
 use Illuminate\Support\ServiceProvider;
 use professionalweb\payment\contracts\PayService;
-use professionalweb\payment\drivers\payonline\PayOnlineDriver;
+use professionalweb\payment\drivers\tinkoff\TinkoffDriver;
+
 
 /**
  * PayOnline payment provider
  * @package professionalweb\payment
  */
-class PayOnlineProvider extends ServiceProvider
+class TinkoffProvider extends ServiceProvider
 {
     /**
      * Indicates if loading of the provider is deferred.
@@ -25,13 +26,13 @@ class PayOnlineProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(PayService::class, function ($app) {
-            return new PayOnlineDriver(config('payonline'));
+            return new TinkoffDriver(config('tinkoff'));
         });
-        $this->app->singleton(PayOnlineDriver::class, function ($app) {
-            return new PayOnlineDriver(config('payonline'));
+        $this->app->singleton(TinkoffDriver::class, function ($app) {
+            return new TinkoffDriver(config('tinkoff'));
         });
-        $this->app->singleton('\professionalweb\payment\PayOnline', function ($app) {
-            return new PayOnlineDriver(config('payonline'));
+        $this->app->singleton('\professionalweb\payment\Tinkoff', function ($app) {
+            return new TinkoffDriver(config('tinkoff'));
         });
     }
 
@@ -42,6 +43,6 @@ class PayOnlineProvider extends ServiceProvider
      */
     public function provides()
     {
-        return [PayService::class, PayOnlineDriver::class, '\professionalweb\payment\PayOnline'];
+        return [PayService::class, TinkoffDriver::class, '\professionalweb\payment\Tinkoff'];
     }
 }

@@ -6,6 +6,7 @@ interface PayService
      * Rubles
      */
     const CURRENCY_RUR = 'RUB';
+    const CURRENCY_RUR_ISO = 643;
 
     /**
      * Pay
