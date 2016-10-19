@@ -1,4 +1,4 @@
-<?php namespace professionalweb\payment;
+<?php namespace professionalweb\payonline;
 
 use Illuminate\Support\ServiceProvider;
 use professionalweb\payonline\contracts\PayService;
