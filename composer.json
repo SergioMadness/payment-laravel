@@ -1,0 +1,46 @@
+{
+  "name": "professionalweb/payonline-laravel",
+  "version": "0.1",
+  "description": "'PayOnline' payment system driver for laravel",
+  "homepage": "http://web-development.pw/",
+  "keywords": [
+    "pwf",
+    "professional web",
+    "web-development.pw",
+    "composer",
+    "payment system",
+    "payonline",
+    "laravel"
+  ],
+  "minimum-stability": "stable",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Zinchenko Sergey",
+      "email": "zinchenko@web-development.pw"
+    }
+  ],
+  "support": {
+    "email": "info@web-development.pw",
+    "issues": "https://github.com/SergioMadness/payonline/issues",
+    "wiki": "https://github.com/SergioMadness/payonline/wiki",
+    "source": "https://github.com/SergioMadness/payonline/releases"
+  },
+  "require": {
+    "illuminate/support": ">=5.2"
+  },
+  "require-dev": {
+    "codeception/codeception": "*",
+    "satooshi/php-coveralls": "*",
+    "codeclimate/php-test-reporter": "*"
+  },
+  "config": {
+    "process-timeout": 1800
+  },
+  "autoload": {
+    "psr-4": {
+      "professionalweb\\payonline\\": "src/"
+    }
+  }
+}
