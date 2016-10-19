@@ -32,15 +32,16 @@ class TinkoffDriver implements PayService
     /**
      * Pay
      *
-     * @param int    $orderId
-     * @param int    $paymentId
-     * @param float  $amount
-     * @param int    $currency
-     * @param string $successReturnUrl
-     * @param string $failReturnUrl
-     * @param string $description
+     * @param int        $orderId
+     * @param int        $paymentId
+     * @param float      $amount
+     * @param int|string $currency
+     * @param string     $successReturnUrl
+     * @param string     $failReturnUrl
+     * @param string     $description
      *
      * @return string
+     * @throws \Exception
      */
     public function getPaymentLink($orderId,
                                    $paymentId,

@@ -1,15 +1,12 @@
 <?php namespace professionalweb\payment;
 
 use Illuminate\Support\ServiceProvider;
-use professionalweb\payment\contracts\PayService;
-use professionalweb\payment\drivers\payonline\PayOnlineDriver;
 
-/**
- * PayOnline payment provider
- * @package professionalweb\payment
- */
-class PayOnlineProvider extends ServiceProvider
+class PaymentProvider extends ServiceProvider
 {
+    const PAYMENT_TINKOFF = 'tinkoff';
+    const PAYMENT_PAYONLINE = 'payonline';
+
     /**
      * Indicates if loading of the provider is deferred.
      *
@@ -25,13 +22,13 @@ class PayOnlineProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(PayService::class, function ($app) {
-            return new PayOnlineDriver(config('payment.payonline'));
+            return new PayOnlineDriver(config('payonline'));
         });
         $this->app->singleton(PayOnlineDriver::class, function ($app) {
-            return new PayOnlineDriver(config('payment.payonline'));
+            return new PayOnlineDriver(config('payonline'));
         });
         $this->app->singleton('\professionalweb\payment\PayOnline', function ($app) {
-            return new PayOnlineDriver(config('payment.payonline'));
+            return new PayOnlineDriver(config('payonline'));
         });
     }
 
