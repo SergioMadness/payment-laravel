@@ -13,13 +13,20 @@ class PayOnlineDriver implements PayService
     /**
      * Payonline object
      *
-     * @var PayOnline
+     * @var \PayOnline
      */
     private $payonline;
 
+    /**
+     * Module config
+     *
+     * @var array
+     */
+    private $config;
+
     public function __construct($config)
     {
-        $this->setPayonline(new \PayOnline($config['merchantId'], $config['secretKey']));
+        $this->setConfig($config)->setPayonline(new \PayOnline($config['merchantId'], $config['secretKey']));
     }
 
     /**
@@ -44,10 +51,10 @@ class PayOnlineDriver implements PayService
                                    $description = '')
     {
         if (empty($failReturnUrl)) {
-            $failReturnUrl = \Config::get('payonline.successURL');
+            $failReturnUrl = $this->getConfig()['successURL'];
         }
         if (empty($failReturnUrl)) {
-            $failReturnUrl = \Config::get('payonline.failURL');
+            $failReturnUrl = $this->getConfig()['failURL'];
         }
         $data = [
             'OrderId'          => $orderId,
@@ -83,7 +90,7 @@ class PayOnlineDriver implements PayService
     /**
      * Get payonline object
      *
-     * @return PayOnline
+     * @return \PayOnline
      */
     public function getPayonline()
     {
@@ -93,7 +100,7 @@ class PayOnlineDriver implements PayService
     /**
      * Set Payonline object
      *
-     * @param PayOnline $payonline
+     * @param \PayOnline $payonline
      *
      * @return $this
      */
@@ -104,5 +111,28 @@ class PayOnlineDriver implements PayService
         return $this;
     }
 
+    /**
+     * Get configuration
+     *
+     * @return array
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
+    /**
+     * Set driver configuration
+     *
+     * @param array $config
+     *
+     * @return $this
+     */
+    public function setConfig($config)
+    {
+        $this->config = $config;
+
+        return $this;
+    }
 
 }
