@@ -26,13 +26,13 @@ class TinkoffProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(PayService::class, function ($app) {
-            return new TinkoffDriver(config('tinkoff'));
+            return new TinkoffDriver(config('payment.tinkoff'));
         });
         $this->app->singleton(TinkoffDriver::class, function ($app) {
-            return new TinkoffDriver(config('tinkoff'));
+            return new TinkoffDriver(config('payment.tinkoff'));
         });
         $this->app->singleton('\professionalweb\payment\Tinkoff', function ($app) {
-            return new TinkoffDriver(config('tinkoff'));
+            return new TinkoffDriver(config('payment.tinkoff'));
         });
     }
 

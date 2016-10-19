@@ -21,15 +21,14 @@ class PaymentProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(PayService::class, function ($app) {
-            return new PayOnlineDriver(config('payonline'));
-        });
-        $this->app->singleton(PayOnlineDriver::class, function ($app) {
-            return new PayOnlineDriver(config('payonline'));
-        });
-        $this->app->singleton('\professionalweb\payment\PayOnline', function ($app) {
-            return new PayOnlineDriver(config('payonline'));
-        });
+        switch (config('payment.default_driver')) {
+            case self::PAYMENT_TINKOFF :
+                (new TinkoffProvider($this->app))->register();
+                break;
+            case self::PAYMENT_PAYONLINE:
+                (new PayOnlineProvider($this->app))->register();
+                break;
+        }
     }
 
     /**
@@ -39,6 +38,11 @@ class PaymentProvider extends ServiceProvider
      */
     public function provides()
     {
-        return [PayService::class, PayOnlineDriver::class, '\professionalweb\payment\PayOnline'];
+        switch (config('payment.default_driver')) {
+            case self::PAYMENT_TINKOFF :
+                return (new TinkoffProvider($this->app))->provides();
+            case self::PAYMENT_PAYONLINE:
+                return (new PayOnlineProvider($this->app))->provides();
+        }
     }
 }
