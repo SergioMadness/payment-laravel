@@ -52,26 +52,18 @@ class TinkoffDriver implements PayService
                                    $failReturnUrl = '',
                                    $description = '')
     {
-        if (empty($successReturnUrl)) {
-            $failReturnUrl = $this->getConfig()['successURL'];
-        }
-        if (empty($failReturnUrl)) {
-            $failReturnUrl = $this->getConfig()['failURL'];
-        }
         $data = [
             'OrderId'     => $orderId,
             'Amount'      => round($amount * 100),
             'Currency'    => (new ISO4217())->getByAlpha3($currency)['numeric'],
             'Description' => $description,
             'DATA'        => 'PaymentId=' . $paymentId,
-            'ReturnUrl'   => $successReturnUrl,
-            'FailUrl'     => $failReturnUrl,
         ];
         $driver = $this->getTinkoffClass();
         $driver->init($data);
 
-        if (!empty($driver->error)) {
-            throw new \Exception($driver->error);
+        if ($driver->error != '') {
+            throw new \HttpException($driver->error);
         }
 
         return $driver->paymentUrl;
