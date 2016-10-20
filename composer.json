@@ -29,7 +29,8 @@
     "source": "https://github.com/SergioMadness/payonline/releases"
   },
   "require": {
-    "illuminate/support": ">=5.2"
+    "illuminate/support": ">=5.2",
+    "alcohol/iso4217": "*"
   },
   "require-dev": {
     "codeception/codeception": "*",

@@ -2,6 +2,7 @@
 
 require_once 'TinkoffMerchantAPI.php';
 
+use Alcohol\ISO4217;
 use professionalweb\payment\contracts\PayService;
 
 /**
@@ -60,7 +61,7 @@ class TinkoffDriver implements PayService
         $data = [
             'OrderId'     => $orderId,
             'Amount'      => round($amount * 100),
-            'Currency'    => $currency,
+            'Currency'    => (new ISO4217())->getByAlpha3($currency)['numeric'],
             'Description' => $description,
             'DATA'        => 'PaymentId=' . $paymentId,
             'ReturnUrl'   => $successReturnUrl,

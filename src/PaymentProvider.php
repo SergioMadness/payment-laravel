@@ -1,6 +1,9 @@
 <?php namespace professionalweb\payment;
 
 use Illuminate\Support\ServiceProvider;
+use professionalweb\payment\contracts\PayService;
+use professionalweb\payment\drivers\payonline\PayOnlineDriver;
+use professionalweb\payment\drivers\tinkoff\TinkoffDriver;
 
 class PaymentProvider extends ServiceProvider
 {
@@ -21,14 +24,20 @@ class PaymentProvider extends ServiceProvider
      */
     public function register()
     {
-        switch (config('payment.default_driver')) {
-            case self::PAYMENT_TINKOFF :
-                (new TinkoffProvider($this->app))->register();
-                break;
-            case self::PAYMENT_PAYONLINE:
-                (new PayOnlineProvider($this->app))->register();
-                break;
-        }
+        $this->app->singleton(PayService::class, function ($app) {
+            return $this->getFacade();
+        });
+        $this->app->bind('\Payment', function ($app) {
+            return $this->getFacade();
+        });
+    }
+
+    protected function getFacade()
+    {
+        return (new Payment())->setDrivers([
+            self::PAYMENT_TINKOFF   => TinkoffDriver::class,
+            self::PAYMENT_PAYONLINE => PayOnlineDriver::class,
+        ])->setCurrentDriver(config('payment.default_driver'));
     }
 
     /**
@@ -38,11 +47,10 @@ class PaymentProvider extends ServiceProvider
      */
     public function provides()
     {
-        switch (config('payment.default_driver')) {
-            case self::PAYMENT_TINKOFF :
-                return (new TinkoffProvider($this->app))->provides();
-            case self::PAYMENT_PAYONLINE:
-                return (new PayOnlineProvider($this->app))->provides();
-        }
+        return array_merge(
+            (new TinkoffProvider($this->app))->provides(),
+            (new PayOnlineProvider($this->app))->provides(),
+            ['\Payment']
+        );
     }
 }

@@ -33,6 +33,7 @@ class PayOnlineProvider extends ServiceProvider
         $this->app->singleton('\professionalweb\payment\PayOnline', function ($app) {
             return new PayOnlineDriver(config('payment.payonline'));
         });
+        $this->app->bind('\Payment', Payment::class);
     }
 
     /**
@@ -42,6 +43,6 @@ class PayOnlineProvider extends ServiceProvider
      */
     public function provides()
     {
-        return [PayService::class, PayOnlineDriver::class, '\professionalweb\payment\PayOnline'];
+        return [PayService::class, PayOnlineDriver::class, '\professionalweb\payment\PayOnline', '\Payment'];
     }
 }

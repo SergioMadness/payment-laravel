@@ -34,6 +34,7 @@ class TinkoffProvider extends ServiceProvider
         $this->app->singleton('\professionalweb\payment\Tinkoff', function ($app) {
             return new TinkoffDriver(config('payment.tinkoff'));
         });
+        $this->app->bind('\Payment', Payment::class);
     }
 
     /**
@@ -43,6 +44,6 @@ class TinkoffProvider extends ServiceProvider
      */
     public function provides()
     {
-        return [PayService::class, TinkoffDriver::class, '\professionalweb\payment\Tinkoff'];
+        return [PayService::class, TinkoffDriver::class, '\professionalweb\payment\Tinkoff', '\Payment'];
     }
 }
