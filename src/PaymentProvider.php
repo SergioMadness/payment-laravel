@@ -47,10 +47,6 @@ class PaymentProvider extends ServiceProvider
      */
     public function provides()
     {
-        return array_merge(
-            (new TinkoffProvider($this->app))->provides(),
-            (new PayOnlineProvider($this->app))->provides(),
-            ['\Payment']
-        );
+        return ['\Payment', PayService::class];
     }
 }
