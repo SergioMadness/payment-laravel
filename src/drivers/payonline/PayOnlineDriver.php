@@ -157,13 +157,26 @@ class PayOnlineDriver implements PayService
     }
 
     /**
+     * Get response param by name
+     *
+     * @param string $name
+     * @param string $default
+     *
+     * @return mixed|string
+     */
+    public function getResponseParam($name, $default = '')
+    {
+        return isset($this->response[$name]) ? $this->response[$name] : $default;
+    }
+
+    /**
      * Get order ID
      *
      * @return string
      */
     public function getOrderId()
     {
-        return $this->response['OrderId'];
+        return $this->getResponseParam('OrderId');
     }
 
     /**
@@ -173,7 +186,7 @@ class PayOnlineDriver implements PayService
      */
     public function getStatus()
     {
-        return $this->response['Code'];
+        return $this->getResponseParam('Code');
     }
 
     /**
@@ -183,7 +196,7 @@ class PayOnlineDriver implements PayService
      */
     public function isSuccess()
     {
-        return $this->response['ErrorCode'] == 0;
+        return $this->getResponseParam('ErrorCode', 1) == 0;
     }
 
     /**
@@ -193,7 +206,7 @@ class PayOnlineDriver implements PayService
      */
     public function getTransactionId()
     {
-        return $this->response['TransactionID'];
+        return $this->getResponseParam('TransactionID');
     }
 
     /**
@@ -203,7 +216,7 @@ class PayOnlineDriver implements PayService
      */
     public function getAmount()
     {
-        return $this->response['Amount'];
+        return $this->getResponseParam('Amount');
     }
 
     /**
@@ -213,7 +226,7 @@ class PayOnlineDriver implements PayService
      */
     public function getErrorCode()
     {
-        return $this->response['ErrorCode'];
+        return $this->getResponseParam('ErrorCode');
     }
 
     /**
@@ -223,7 +236,7 @@ class PayOnlineDriver implements PayService
      */
     public function getProvider()
     {
-        return $this->response['Provider'];
+        return $this->getResponseParam('Provider');
     }
 
     /**
@@ -233,7 +246,7 @@ class PayOnlineDriver implements PayService
      */
     public function getPan()
     {
-        return $this->response['CardNumber'];
+        return $this->getResponseParam('CardNumber');
     }
 
     /**
@@ -243,6 +256,6 @@ class PayOnlineDriver implements PayService
      */
     public function getDateTime()
     {
-        return $this->response['DateTime'];
+        return $this->getResponseParam('DateTime');
     }
 }

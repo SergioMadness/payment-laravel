@@ -161,13 +161,26 @@ class TinkoffDriver implements PayService
     }
 
     /**
+     * Get response param by name
+     *
+     * @param string $name
+     * @param string $default
+     *
+     * @return mixed|string
+     */
+    public function getResponseParam($name, $default = '')
+    {
+        return isset($this->response[$name]) ? $this->response[$name] : $default;
+    }
+
+    /**
      * Get order ID
      *
      * @return string
      */
     public function getOrderId()
     {
-        return $this->response['OrderId'];
+        return $this->getResponseParam('OrderId');
     }
 
     /**
@@ -177,7 +190,7 @@ class TinkoffDriver implements PayService
      */
     public function getStatus()
     {
-        return $this->response['Status'];
+        return $this->getResponseParam('Status');
     }
 
     /**
@@ -187,7 +200,7 @@ class TinkoffDriver implements PayService
      */
     public function isSuccess()
     {
-        return $this->response['Success'] === 'true';
+        return $this->getResponseParam('Success', 'false') === 'true';
     }
 
     /**
@@ -197,7 +210,7 @@ class TinkoffDriver implements PayService
      */
     public function getTransactionId()
     {
-        return $this->response['PaymentId'];
+        return $this->getResponseParam('PaymentId');
     }
 
     /**
@@ -207,7 +220,7 @@ class TinkoffDriver implements PayService
      */
     public function getAmount()
     {
-        return $this->response['Amount'];
+        return $this->getResponseParam('Amount');
     }
 
     /**
@@ -217,7 +230,7 @@ class TinkoffDriver implements PayService
      */
     public function getErrorCode()
     {
-        return $this->response['ErrorCode'];
+        return $this->getResponseParam('ErrorCode');
     }
 
     /**
@@ -237,7 +250,7 @@ class TinkoffDriver implements PayService
      */
     public function getPan()
     {
-        return $this->response['Pan'];
+        return $this->getResponseParam('Pan');
     }
 
     /**
@@ -247,6 +260,6 @@ class TinkoffDriver implements PayService
      */
     public function getDateTime()
     {
-        return $this->response['DateTime'];
+        return $this->getResponseParam('DateTime');
     }
 }
