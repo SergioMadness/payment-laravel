@@ -72,6 +72,7 @@ class TinkoffDriver implements PayService
         if ($driver->error != '') {
             throw new \HttpException($driver->error);
         }
+        $this->response['PaymentId'] = $driver->paymentId;
 
         return $driver->paymentUrl;
     }
