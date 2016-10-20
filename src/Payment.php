@@ -15,7 +15,7 @@ class Payment extends Facade implements PayService
     /**
      * Current driver
      *
-     * @var string
+     * @var PayService
      */
     private $currentDriver;
 
@@ -50,10 +50,7 @@ class Payment extends Facade implements PayService
                                    $failReturnUrl = '',
                                    $description = '')
     {
-        $currentDriver = $this->getCurrentDriver();
-        return \App::make($this->getDriver($currentDriver), [
-            'config' => config('payment.' . $currentDriver),
-        ])->getPaymentLink($orderId,
+        return $this->getCurrentDriver()->getPaymentLink($orderId,
             $paymentId,
             $amount,
             $currency,
@@ -71,11 +68,7 @@ class Payment extends Facade implements PayService
      */
     public function validate($data)
     {
-        $currentDriver = $this->getCurrentDriver();
-
-        return \App::make($this->getDriver($currentDriver), [
-            'config' => config('payment.' . $currentDriver),
-        ])->validate($data);
+        return $this->getCurrentDriver()->validate($data);
     }
 
     /**
@@ -138,7 +131,9 @@ class Payment extends Facade implements PayService
      */
     public function setCurrentDriver($name)
     {
-        $this->currentDriver = $name;
+        $this->currentDriver = \App::make($this->getDriver($name), [
+            'config' => config('payment.' . $name),
+        ]);
 
         return $this;
     }
@@ -146,7 +141,7 @@ class Payment extends Facade implements PayService
     /**
      * Get current driver name
      *
-     * @return string
+     * @return PayService
      */
     public function getCurrentDriver()
     {
@@ -163,5 +158,107 @@ class Payment extends Facade implements PayService
     public function driver($name)
     {
         return $this->setCurrentDriver($name);
+    }
+
+    /**
+     * Parse notification
+     *
+     * @param array $data
+     *
+     * @return $this
+     */
+    public function setResponse($data)
+    {
+        return $this->getCurrentDriver()->setResponse($data);
+    }
+
+    /**
+     * Get order ID
+     *
+     * @return string
+     */
+    public function getOrderId()
+    {
+        return $this->getCurrentDriver()->getOrderId();
+    }
+
+    /**
+     * Get operation status
+     *
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->getCurrentDriver()->getStatus();
+    }
+
+    /**
+     * Is payment succeed
+     *
+     * @return bool
+     */
+    public function isSuccess()
+    {
+        return $this->getCurrentDriver()->isSuccess();
+    }
+
+    /**
+     * Get transaction ID
+     *
+     * @return string
+     */
+    public function getTransactionId()
+    {
+        return $this->getCurrentDriver()->getTransactionId();
+    }
+
+    /**
+     * Get transaction amount
+     *
+     * @return float
+     */
+    public function getAmount()
+    {
+        return $this->getCurrentDriver()->getAmount();
+    }
+
+    /**
+     * Get error code
+     *
+     * @return int
+     */
+    public function getErrorCode()
+    {
+        return $this->getCurrentDriver()->getErrorCode();
+    }
+
+    /**
+     * Get payment provider
+     *
+     * @return string
+     */
+    public function getProvider()
+    {
+        return $this->getCurrentDriver()->getProvider();
+    }
+
+    /**
+     * Get PAn
+     *
+     * @return string
+     */
+    public function getPan()
+    {
+        return $this->getCurrentDriver()->getPan();
+    }
+
+    /**
+     * Get payment datetime
+     *
+     * @return string
+     */
+    public function getDateTime()
+    {
+        return $this->getCurrentDriver()->getDateTime();
     }
 }
