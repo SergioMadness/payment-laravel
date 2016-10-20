@@ -24,6 +24,13 @@ class PayOnlineDriver implements PayService
      */
     private $config;
 
+    /**
+     * Notification info
+     *
+     * @var array
+     */
+    protected $response;
+
     public function __construct($config)
     {
         $this->setConfig($config)->setPayonline(new \PayOnline($config['merchantId'], $config['secretKey']));
@@ -135,4 +142,107 @@ class PayOnlineDriver implements PayService
         return $this;
     }
 
+    /**
+     * Parse notification
+     *
+     * @param array $data
+     *
+     * @return mixed
+     */
+    public function setResponse($data)
+    {
+        $this->response = $data;
+
+        return $this;
+    }
+
+    /**
+     * Get order ID
+     *
+     * @return string
+     */
+    public function getOrderId()
+    {
+        return $this->response['OrderId'];
+    }
+
+    /**
+     * Get operation status
+     *
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->response['Code'];
+    }
+
+    /**
+     * Is payment succeed
+     *
+     * @return bool
+     */
+    public function isSuccess()
+    {
+        return $this->response['ErrorCode'] == 0;
+    }
+
+    /**
+     * Get transaction ID
+     *
+     * @return string
+     */
+    public function getTransactionId()
+    {
+        return $this->response['TransactionId'];
+    }
+
+    /**
+     * Get transaction amount
+     *
+     * @return float
+     */
+    public function getAmount()
+    {
+        return $this->response['Amount'];
+    }
+
+    /**
+     * Get error code
+     *
+     * @return int
+     */
+    public function getErrorCode()
+    {
+        return $this->response['ErrorCode'];
+    }
+
+    /**
+     * Get payment provider
+     *
+     * @return string
+     */
+    public function getProvider()
+    {
+        return $this->response['Provider'];
+    }
+
+    /**
+     * Get PAn
+     *
+     * @return string
+     */
+    public function getPan()
+    {
+        return $this->response['CardNumber'];
+    }
+
+    /**
+     * Get payment datetime
+     *
+     * @return string
+     */
+    public function getDateTime()
+    {
+        return $this->response['DateTime'];
+    }
 }

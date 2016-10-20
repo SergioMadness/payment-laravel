@@ -37,4 +37,76 @@ interface PayService
      * @return bool
      */
     public function validate($data);
+
+    /**
+     * Parse notification
+     *
+     * @param array $data
+     *
+     * @return $this
+     */
+    public function setResponse($data);
+
+    /**
+     * Get order ID
+     *
+     * @return string
+     */
+    public function getOrderId();
+
+    /**
+     * Get operation status
+     *
+     * @return string
+     */
+    public function getStatus();
+
+    /**
+     * Is payment succeed
+     *
+     * @return bool
+     */
+    public function isSuccess();
+
+    /**
+     * Get transaction ID
+     *
+     * @return string
+     */
+    public function getTransactionId();
+
+    /**
+     * Get transaction amount
+     *
+     * @return float
+     */
+    public function getAmount();
+
+    /**
+     * Get error code
+     *
+     * @return int
+     */
+    public function getErrorCode();
+
+    /**
+     * Get payment provider
+     *
+     * @return string
+     */
+    public function getProvider();
+
+    /**
+     * Get PAn
+     *
+     * @return string
+     */
+    public function getPan();
+
+    /**
+     * Get payment datetime
+     *
+     * @return string
+     */
+    public function getDateTime();
 }

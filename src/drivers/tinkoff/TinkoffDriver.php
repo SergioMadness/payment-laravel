@@ -25,6 +25,13 @@ class TinkoffDriver implements PayService
      */
     private $config;
 
+    /**
+     * Notification info
+     *
+     * @var array
+     */
+    protected $response;
+
     public function __construct($config)
     {
         $this->setConfig($config)->setTinkoffClass(new \TinkoffMerchantAPI($config['merchantId'], $config['secretKey'], $config['apiUrl']));
@@ -135,4 +142,108 @@ class TinkoffDriver implements PayService
         return $this;
     }
 
+    /**
+     * Parse notification
+     *
+     * @param array $data
+     *
+     * @return mixed
+     */
+    public function setResponse($data)
+    {
+        $data['DateTime'] = date('Y-m-d H:i:s');
+        $this->response = $data;
+
+        return $this;
+    }
+
+    /**
+     * Get order ID
+     *
+     * @return string
+     */
+    public function getOrderId()
+    {
+        return $this->response['OrderId'];
+    }
+
+    /**
+     * Get operation status
+     *
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->response['Status'];
+    }
+
+    /**
+     * Is payment succeed
+     *
+     * @return bool
+     */
+    public function isSuccess()
+    {
+        return $this->response['Success'] === 'true';
+    }
+
+    /**
+     * Get transaction ID
+     *
+     * @return string
+     */
+    public function getTransactionId()
+    {
+        return $this->response['PaymentId'];
+    }
+
+    /**
+     * Get transaction amount
+     *
+     * @return float
+     */
+    public function getAmount()
+    {
+        return $this->response['Amount'];
+    }
+
+    /**
+     * Get error code
+     *
+     * @return int
+     */
+    public function getErrorCode()
+    {
+        return $this->response['ErrorCode'];
+    }
+
+    /**
+     * Get payment provider
+     *
+     * @return string
+     */
+    public function getProvider()
+    {
+        return 'card';
+    }
+
+    /**
+     * Get PAn
+     *
+     * @return string
+     */
+    public function getPan()
+    {
+        return $this->response['Pan'];
+    }
+
+    /**
+     * Get payment datetime
+     *
+     * @return string
+     */
+    public function getDateTime()
+    {
+        return $this->response['DateTime'];
+    }
 }
