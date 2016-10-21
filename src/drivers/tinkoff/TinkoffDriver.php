@@ -88,10 +88,12 @@ class TinkoffDriver implements PayService
     {
         $result = false;
 
-        $token = $data['Token'];
-        unset($data['Token']);
-        if ($token != '' && $this->getTinkoffClass()->genToken($data) == $token) {
-            $result = true;
+        if (isset($data['Token'])) {
+            $token = $data['Token'];
+            unset($data['Token']);
+            if ($token != '' && $this->getTinkoffClass()->genToken($data) == $token) {
+                $result = true;
+            }
         }
 
         return $result;
