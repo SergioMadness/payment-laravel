@@ -1,8 +1,13 @@
 <?php namespace professionalweb\payment;
 
 use Illuminate\Support\Facades\Facade;
+use professionalweb\payment\contracts\PayProtocol;
 use professionalweb\payment\contracts\PayService;
 
+/**
+ * Payment facade
+ * @package professionalweb\payment
+ */
 class Payment extends Facade implements PayService
 {
     /**
@@ -260,5 +265,41 @@ class Payment extends Facade implements PayService
     public function getDateTime()
     {
         return $this->getCurrentDriver()->getDateTime();
+    }
+
+    /**
+     * Set transport/protocol wrapper
+     *
+     * @param PayProtocol $protocol
+     *
+     * @return $this
+     */
+    public function setTransport(PayProtocol $protocol)
+    {
+        return $this;
+    }
+
+    /**
+     * Prepare response on notification request
+     *
+     * @param int $errorCode
+     *
+     * @return string
+     */
+    public function getNotificationResponse($errorCode = 0)
+    {
+        return $this->getCurrentDriver()->getNotificationResponse($errorCode);
+    }
+
+    /**
+     * Prepare response on check request
+     *
+     * @param int $errorCode
+     *
+     * @return string
+     */
+    public function getCheckResponse($errorCode = 0)
+    {
+        return $this->getCurrentDriver()->getNotificationResponse($errorCode);
     }
 }

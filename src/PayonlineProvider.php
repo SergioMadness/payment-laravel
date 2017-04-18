@@ -3,6 +3,7 @@
 use Illuminate\Support\ServiceProvider;
 use professionalweb\payment\contracts\PayService;
 use professionalweb\payment\drivers\payonline\PayOnlineDriver;
+use professionalweb\payment\drivers\payonline\PayOnlineProtocol;
 
 /**
  * PayOnline payment provider
@@ -25,13 +26,19 @@ class PayOnlineProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(PayService::class, function ($app) {
-            return new PayOnlineDriver(config('payment.payonline'));
+            return (new PayOnlineDriver(config('payment.payonline')))->setTransport(
+                new PayOnlineProtocol(config('payment.tinkoff.merchantId'), config('payment.tinkoff.secretKey'))
+            );
         });
         $this->app->singleton(PayOnlineDriver::class, function ($app) {
-            return new PayOnlineDriver(config('payment.payonline'));
+            return (new PayOnlineDriver(config('payment.payonline')))->setTransport(
+                new PayOnlineProtocol(config('payment.tinkoff.merchantId'), config('payment.tinkoff.secretKey'))
+            );
         });
         $this->app->singleton('\professionalweb\payment\PayOnline', function ($app) {
-            return new PayOnlineDriver(config('payment.payonline'));
+            return (new PayOnlineDriver(config('payment.payonline')))->setTransport(
+                new PayOnlineProtocol(config('payment.tinkoff.merchantId'), config('payment.tinkoff.secretKey'))
+            );
         });
         $this->app->bind('\Payment', Payment::class);
     }

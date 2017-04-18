@@ -1,8 +1,7 @@
 <?php namespace professionalweb\payment\drivers\tinkoff;
 
-require_once 'TinkoffMerchantAPI.php';
-
 use Alcohol\ISO4217;
+use professionalweb\payment\contracts\PayProtocol;
 use professionalweb\payment\contracts\PayService;
 
 /**
@@ -14,9 +13,9 @@ class TinkoffDriver implements PayService
     /**
      * TinkoffMerchantAPI object
      *
-     * @var \TinkoffMerchantAPI
+     * @var PayProtocol
      */
-    private $tinkoffClass;
+    private $transport;
 
     /**
      * Module config
@@ -34,7 +33,7 @@ class TinkoffDriver implements PayService
 
     public function __construct($config)
     {
-        $this->setConfig($config)->setTinkoffClass(new \TinkoffMerchantAPI($config['merchantId'], $config['secretKey'], $config['apiUrl']));
+        $this->setConfig($config);
     }
 
     /**
@@ -66,15 +65,12 @@ class TinkoffDriver implements PayService
             'Description' => $description,
             'DATA'        => 'PaymentId=' . $paymentId,
         ];
-        $driver = $this->getTinkoffClass();
-        $driver->init($data);
 
-        if ($driver->error != '') {
-            throw new \Exception($driver->error);
-        }
-        $this->response['PaymentId'] = $driver->paymentId;
+        $paymentUrl = $this->getTransport()->getPaymentUrl($data);
 
-        return $driver->paymentUrl;
+        $this->response['PaymentId'] = $this->getTransport()->getPaymentId();
+
+        return $paymentUrl;
     }
 
     /**
@@ -86,41 +82,7 @@ class TinkoffDriver implements PayService
      */
     public function validate($data)
     {
-        $result = false;
-
-        if (isset($data['Token'])) {
-            $token = $data['Token'];
-            unset($data['Token']);
-            if ($token != '' && $this->getTinkoffClass()->genToken($data) == $token) {
-                $result = true;
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Get TinkoffMerchantAPI object
-     *
-     * @return \TinkoffMerchantAPI
-     */
-    public function getTinkoffClass()
-    {
-        return $this->tinkoffClass;
-    }
-
-    /**
-     * Set TinkoffMerchantAPI object
-     *
-     * @param \TinkoffMerchantAPI $tinkoff
-     *
-     * @return $this
-     */
-    public function setTinkoffClass($tinkoff)
-    {
-        $this->tinkoffClass = $tinkoff;
-
-        return $this;
+        return $this->getTransport()->validate($data);
     }
 
     /**
@@ -263,5 +225,53 @@ class TinkoffDriver implements PayService
     public function getDateTime()
     {
         return $this->getResponseParam('DateTime');
+    }
+
+    /**
+     * Set transport/protocol wrapper
+     *
+     * @param PayProtocol $protocol
+     *
+     * @return $this
+     */
+    public function setTransport(PayProtocol $protocol)
+    {
+        $this->transport = $protocol;
+
+        return $this;
+    }
+
+    /**
+     * Get transport
+     *
+     * @return PayProtocol
+     */
+    public function getTransport()
+    {
+        return $this->transport;
+    }
+
+    /**
+     * Prepare response on notification request
+     *
+     * @param int $errorCode
+     *
+     * @return string
+     */
+    public function getNotificationResponse($errorCode = 0)
+    {
+        return $this->getTransport()->getNotificationResponse($this->response, $errorCode);
+    }
+
+    /**
+     * Prepare response on check request
+     *
+     * @param int $errorCode
+     *
+     * @return string
+     */
+    public function getCheckResponse($errorCode = 0)
+    {
+        return $this->getTransport()->getNotificationResponse($this->response, $errorCode);
     }
 }

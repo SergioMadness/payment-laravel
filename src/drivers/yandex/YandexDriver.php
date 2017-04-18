@@ -1,20 +1,14 @@
-<?php namespace professionalweb\payment\drivers\payonline;
+<?php namespace professionalweb\payment\drivers\yandex;
 
-use professionalweb\payment\contracts\PayService;
 use professionalweb\payment\contracts\PayProtocol;
+use professionalweb\payment\contracts\PayService;
 
 /**
  * Payment service. Pay, Check, etc
  * @package AlpinaDigital\Services
  */
-class PayOnlineDriver implements PayService
+class YandexDriver implements PayService
 {
-    /**
-     * Payonline object
-     *
-     * @var PayProtocol
-     */
-    private $transport;
 
     /**
      * Module config
@@ -30,6 +24,11 @@ class PayOnlineDriver implements PayService
      */
     protected $response;
 
+    /**
+     * @var PayProtocol
+     */
+    private $transport;
+
     public function __construct($config)
     {
         $this->setConfig($config);
@@ -38,41 +37,29 @@ class PayOnlineDriver implements PayService
     /**
      * Pay
      *
-     * @param int    $orderId
-     * @param int    $paymentId
-     * @param float  $amount
-     * @param string $currency
-     * @param string $successReturnUrl
-     * @param string $failReturnUrl
-     * @param string $description
+     * @param int        $orderId
+     * @param int        $paymentId
+     * @param float      $amount
+     * @param int|string $currency
+     * @param string     $successReturnUrl
+     * @param string     $failReturnUrl
+     * @param string     $description
      *
      * @return string
+     * @throws \Exception
      */
     public function getPaymentLink($orderId,
                                    $paymentId,
                                    $amount,
-                                   $currency = self::CURRENCY_RUR,
+                                   $currency = self::CURRENCY_RUR_ISO,
                                    $successReturnUrl = '',
                                    $failReturnUrl = '',
                                    $description = '')
     {
-        if (empty($successReturnUrl)) {
-            $successReturnUrl = $this->getConfig()['successURL'];
-        }
-        if (empty($failReturnUrl)) {
-            $failReturnUrl = $this->getConfig()['failURL'];
-        }
-        $data = [
-            'OrderId'          => $orderId,
-            'Amount'           => number_format(round($amount, 2), 2, '.', ''),
-            'Currency'         => $currency,
-            'OrderDescription' => $description,
-            'PaymentId'        => $paymentId,
-            'ReturnUrl'        => $successReturnUrl,
-            'FailUrl'          => $failReturnUrl,
-        ];
-
-        return $this->getTransport()->getPaymentUrl($data);
+        return $this->getTransport()->getPaymentUrl([
+            'customerName' => $orderId,
+            'sum'          => $amount,
+        ]);
     }
 
     /**
@@ -85,30 +72,6 @@ class PayOnlineDriver implements PayService
     public function validate($data)
     {
         return $this->getTransport()->validate($data);
-    }
-
-    /**
-     * Set transport
-     *
-     * @param PayProtocol $transport
-     *
-     * @return $this
-     */
-    public function setTransport(PayProtocol $transport)
-    {
-        $this->transport = $transport;
-
-        return $this;
-    }
-
-    /**
-     * Get protocol wrapper
-     *
-     * @return PayProtocol
-     */
-    public function getTransport()
-    {
-        return $this->transport;
     }
 
     /**
@@ -144,6 +107,7 @@ class PayOnlineDriver implements PayService
      */
     public function setResponse($data)
     {
+        $data['DateTime'] = date('Y-m-d H:i:s');
         $this->response = $data;
 
         return $this;
@@ -179,7 +143,7 @@ class PayOnlineDriver implements PayService
      */
     public function getStatus()
     {
-        return $this->getResponseParam('Code');
+        return $this->getResponseParam('Status');
     }
 
     /**
@@ -189,7 +153,7 @@ class PayOnlineDriver implements PayService
      */
     public function isSuccess()
     {
-        return $this->getResponseParam('ErrorCode', 1) == 0;
+        return $this->getResponseParam('Success', 'false') === 'true';
     }
 
     /**
@@ -199,7 +163,7 @@ class PayOnlineDriver implements PayService
      */
     public function getTransactionId()
     {
-        return $this->getResponseParam('TransactionID');
+        return $this->getResponseParam('PaymentId');
     }
 
     /**
@@ -229,7 +193,7 @@ class PayOnlineDriver implements PayService
      */
     public function getProvider()
     {
-        return $this->getResponseParam('Provider');
+        return 'card';
     }
 
     /**
@@ -239,7 +203,7 @@ class PayOnlineDriver implements PayService
      */
     public function getPan()
     {
-        return $this->getResponseParam('CardNumber');
+        return $this->getResponseParam('Pan');
     }
 
     /**
@@ -250,6 +214,30 @@ class PayOnlineDriver implements PayService
     public function getDateTime()
     {
         return $this->getResponseParam('DateTime');
+    }
+
+    /**
+     * Get transport
+     *
+     * @return PayProtocol
+     */
+    public function getTransport()
+    {
+        return $this->transport;
+    }
+
+    /**
+     * Set transport
+     *
+     * @param PayProtocol $transport
+     *
+     * @return $this
+     */
+    public function setTransport(PayProtocol $transport)
+    {
+        $this->transport = $transport;
+
+        return $this;
     }
 
     /**
@@ -275,4 +263,5 @@ class PayOnlineDriver implements PayService
     {
         return $this->getTransport()->getNotificationResponse($this->response, $errorCode);
     }
+
 }

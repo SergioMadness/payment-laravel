@@ -3,10 +3,11 @@
 use Illuminate\Support\ServiceProvider;
 use professionalweb\payment\contracts\PayService;
 use professionalweb\payment\drivers\tinkoff\TinkoffDriver;
+use professionalweb\payment\drivers\tinkoff\TinkoffProtocol;
 
 
 /**
- * PayOnline payment provider
+ * Tinkoff payment provider
  * @package professionalweb\payment
  */
 class TinkoffProvider extends ServiceProvider
@@ -26,13 +27,19 @@ class TinkoffProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(PayService::class, function ($app) {
-            return new TinkoffDriver(config('payment.tinkoff'));
+            return (new TinkoffDriver(config('payment.tinkoff')))->setTransport(
+                new TinkoffProtocol(config('payment.tinkoff.merchantId'), config('payment.tinkoff.secretKey'), config('payment.tinkoff.apiUrl'))
+            );
         });
         $this->app->singleton(TinkoffDriver::class, function ($app) {
-            return new TinkoffDriver(config('payment.tinkoff'));
+            return (new TinkoffDriver(config('payment.tinkoff')))->setTransport(
+                new TinkoffProtocol(config('payment.tinkoff.merchantId'), config('payment.tinkoff.secretKey'), config('payment.tinkoff.apiUrl'))
+            );
         });
         $this->app->singleton('\professionalweb\payment\Tinkoff', function ($app) {
-            return new TinkoffDriver(config('payment.tinkoff'));
+            return (new TinkoffDriver(config('payment.tinkoff')))->setTransport(
+                new TinkoffProtocol(config('payment.tinkoff.merchantId'), config('payment.tinkoff.secretKey'), config('payment.tinkoff.apiUrl'))
+            );
         });
         $this->app->bind('\Payment', Payment::class);
     }
