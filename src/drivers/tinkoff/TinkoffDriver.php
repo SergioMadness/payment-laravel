@@ -204,7 +204,7 @@ class TinkoffDriver implements PayService
      */
     public function getProvider()
     {
-        return 'card';
+        return 'tinkoff';
     }
 
     /**

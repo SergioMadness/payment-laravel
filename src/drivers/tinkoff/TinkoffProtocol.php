@@ -40,10 +40,10 @@ class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol
     {
         $result = false;
 
-        if (isset($data['Token'])) {
-            $token = $data['Token'];
-            unset($data['Token']);
-            if ($token != '' && $this->genToken($data) == $token) {
+        if (isset($params['Token'])) {
+            $token = $params['Token'];
+            unset($params['Token']);
+            if ($token != '' && $this->genToken($params) == $token) {
                 $result = true;
             }
         }

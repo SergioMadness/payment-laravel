@@ -9,6 +9,25 @@ use professionalweb\payment\contracts\PayService;
  */
 class YandexDriver implements PayService
 {
+    /**
+     * All right
+     */
+    const CODE_SUCCESS = 0;
+
+    /**
+     * Signature is corrupted
+     */
+    const CODE_CORRUPTED_SIGN = 1;
+
+    /**
+     * Order not found
+     */
+    const CODE_ORDER_NOT_FOUND = 100;
+
+    /**
+     * Can't understand request
+     */
+    const CODE_BAD_PARAMS = 200;
 
     /**
      * Module config
@@ -64,8 +83,10 @@ class YandexDriver implements PayService
                                    $description = '')
     {
         return $this->getTransport()->getPaymentUrl([
+            'orderNumber'  => $orderId,
             'customerName' => $orderId,
             'sum'          => $amount,
+            'paymentId'    => $paymentId,
         ]);
     }
 
@@ -140,7 +161,7 @@ class YandexDriver implements PayService
      */
     public function getOrderId()
     {
-        return $this->getResponseParam('OrderId');
+        return $this->getResponseParam('orderNumber');
     }
 
     /**
@@ -150,7 +171,7 @@ class YandexDriver implements PayService
      */
     public function getStatus()
     {
-        return $this->getResponseParam('Status');
+        return null;
     }
 
     /**
@@ -160,7 +181,7 @@ class YandexDriver implements PayService
      */
     public function isSuccess()
     {
-        return $this->getResponseParam('Success', 'false') === 'true';
+        return $this->getResponseParam('action', 'cancelOrder') !== 'cancelOrder';
     }
 
     /**
@@ -170,7 +191,7 @@ class YandexDriver implements PayService
      */
     public function getTransactionId()
     {
-        return $this->getResponseParam('PaymentId');
+        return $this->getResponseParam('invoiceId');
     }
 
     /**
@@ -180,7 +201,7 @@ class YandexDriver implements PayService
      */
     public function getAmount()
     {
-        return $this->getResponseParam('Amount');
+        return $this->getResponseParam('orderSumAmount');
     }
 
     /**
@@ -190,7 +211,7 @@ class YandexDriver implements PayService
      */
     public function getErrorCode()
     {
-        return $this->getResponseParam('ErrorCode');
+        return $this->getResponseParam('action', 'cancelOrder') !== 'cancelOrder' ? 0 : 1;
     }
 
     /**
@@ -200,7 +221,7 @@ class YandexDriver implements PayService
      */
     public function getProvider()
     {
-        return 'card';
+        return $this->getResponseParam('paymentType');
     }
 
     /**
@@ -210,7 +231,7 @@ class YandexDriver implements PayService
      */
     public function getPan()
     {
-        return $this->getResponseParam('Pan');
+        return $this->getResponseParam('cdd_pan_mask');
     }
 
     /**

@@ -302,4 +302,14 @@ class Payment extends Facade implements PayService
     {
         return $this->getCurrentDriver()->getNotificationResponse($errorCode);
     }
+
+    /**
+     * Get last error code
+     *
+     * @return int
+     */
+    public function getLastError()
+    {
+        $this->getCurrentDriver()->getLastError();
+    }
 }
