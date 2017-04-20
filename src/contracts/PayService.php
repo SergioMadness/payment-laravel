@@ -1,4 +1,5 @@
 <?php namespace professionalweb\payment\contracts;
+
 use Illuminate\Http\Response;
 
 /**
@@ -131,7 +132,7 @@ interface PayService
      *
      * @return Response
      */
-    public function getNotificationResponse($errorCode = 0);
+    public function getNotificationResponse($errorCode = null);
 
     /**
      * Prepare response on check request
@@ -140,5 +141,12 @@ interface PayService
      *
      * @return Response
      */
-    public function getCheckResponse($errorCode = 0);
+    public function getCheckResponse($errorCode = null);
+
+    /**
+     * Get last error code
+     *
+     * @return int
+     */
+    public function getLastError();
 }

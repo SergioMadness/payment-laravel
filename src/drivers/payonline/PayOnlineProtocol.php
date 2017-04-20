@@ -59,9 +59,9 @@ class PayOnlineProtocol extends \PayOnline implements PayProtocol
      *
      * @return string
      */
-    public function getNotificationResponse($requestData, $errorCode)
+    public function getNotificationResponse($requestData, $errorCode = null)
     {
-        return $errorCode ? 'OK' : 'ERROR';
+        return $errorCode > 0 ? response('ERROR') : response('OK');
     }
 
     /**
@@ -72,8 +72,8 @@ class PayOnlineProtocol extends \PayOnline implements PayProtocol
      *
      * @return string
      */
-    public function getCheckResponse($requestData, $errorCode)
+    public function getCheckResponse($requestData, $errorCode = null)
     {
-        return $errorCode ? 'OK' : 'ERROR';
+        return $errorCode > 0 ? response('ERROR') : response('OK');
     }
 }

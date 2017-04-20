@@ -71,7 +71,7 @@ class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol
      */
     public function getNotificationResponse($requestData, $errorCode)
     {
-        return $errorCode ? 'OK' : 'ERROR';
+        return $errorCode > 0 ? response('ERROR') : response('OK');
     }
 
     /**
@@ -84,6 +84,6 @@ class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol
      */
     public function getCheckResponse($requestData, $errorCode)
     {
-        return $errorCode ? 'OK' : 'ERROR';
+        return $errorCode > 0 ? response('ERROR') : response('OK');
     }
 }

@@ -259,7 +259,7 @@ class PayOnlineDriver implements PayService
      *
      * @return string
      */
-    public function getNotificationResponse($errorCode = 0)
+    public function getNotificationResponse($errorCode = null)
     {
         return $this->getTransport()->getNotificationResponse($this->response, $errorCode);
     }
@@ -271,8 +271,18 @@ class PayOnlineDriver implements PayService
      *
      * @return string
      */
-    public function getCheckResponse($errorCode = 0)
+    public function getCheckResponse($errorCode = null)
     {
         return $this->getTransport()->getNotificationResponse($this->response, $errorCode);
+    }
+
+    /**
+     * Get last error code
+     *
+     * @return int
+     */
+    public function getLastError()
+    {
+        return 0;
     }
 }

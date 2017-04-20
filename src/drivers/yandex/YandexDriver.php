@@ -29,6 +29,13 @@ class YandexDriver implements PayService
      */
     private $transport;
 
+    /**
+     * Last error code
+     *
+     * @var int
+     */
+    private $lastError = 0;
+
     public function __construct($config)
     {
         $this->setConfig($config);
@@ -71,7 +78,7 @@ class YandexDriver implements PayService
      */
     public function validate($data)
     {
-        return $this->getTransport()->validate($data);
+        return ($this->lastError = $this->getTransport()->validate($data)) === 0;
     }
 
     /**
@@ -247,9 +254,9 @@ class YandexDriver implements PayService
      *
      * @return string
      */
-    public function getNotificationResponse($errorCode = 0)
+    public function getNotificationResponse($errorCode = null)
     {
-        return $this->getTransport()->getNotificationResponse($this->response, $errorCode);
+        return $this->getTransport()->getNotificationResponse($this->response, $errorCode !== null ?: $this->getLastError());
     }
 
     /**
@@ -259,9 +266,19 @@ class YandexDriver implements PayService
      *
      * @return string
      */
-    public function getCheckResponse($errorCode = 0)
+    public function getCheckResponse($errorCode = null)
     {
-        return $this->getTransport()->getNotificationResponse($this->response, $errorCode);
+        return $this->getTransport()->getNotificationResponse($this->response, $errorCode !== null ?: $this->getLastError());
+    }
+
+    /**
+     * Get last error code
+     *
+     * @return int
+     */
+    public function getLastError()
+    {
+        return $this->lastError;
     }
 
 }
