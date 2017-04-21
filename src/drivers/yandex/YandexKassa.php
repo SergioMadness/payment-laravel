@@ -304,7 +304,7 @@ class YandexKassa implements PayProtocol
      */
     protected function prepareXML($rootName, $errorCode, $invoiceId)
     {
-        return '<?xml version="1.0" encoding="UTF-8"?><' . $rootName . 'Response performedDatetime="' . date('Y-m-d\TH:i:s.000P') .
+        return '<?xml version="1.0" encoding="UTF-8"?><' . $rootName . ' performedDatetime="' . date('Y-m-d\TH:i:s.000P') .
         '" code="' . $errorCode . '"  invoiceId="' . $invoiceId . '" shopId="' . $this->getShopId() . '"/>';
     }
 }
