@@ -83,10 +83,10 @@ class YandexDriver implements PayService
                                    $description = '')
     {
         return $this->getTransport()->getPaymentUrl([
-            'orderNumber'  => $orderId,
-            'customerName' => $orderId,
-            'sum'          => $amount,
-            'paymentId'    => $paymentId,
+            'orderNumber'    => $orderId,
+            'customerNumber' => $orderId,
+            'sum'            => $amount,
+            'paymentId'      => $paymentId,
         ]);
     }
 
