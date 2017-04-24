@@ -86,7 +86,7 @@ class YandexDriver implements PayService
             'orderNumber'    => $orderId,
             'customerNumber' => $orderId,
             'sum'            => $amount,
-            'paymentId'      => $paymentId,
+            'PaymentId'      => $paymentId,
         ]);
     }
 

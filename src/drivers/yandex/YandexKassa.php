@@ -187,12 +187,10 @@ class YandexKassa implements PayProtocol
      */
     public function getPaymentUrl($params)
     {
-        $response = $this->sendPostRequest($this->getEshopUrl(), [
-            'shopId'         => $this->getShopId(),
-            'scid'           => $this->getScid(),
-            'customerNumber' => $params['customerNumber'],
-            'sum'            => $params['sum'],
-        ]);
+        $response = $this->sendPostRequest($this->getEshopUrl(), array_merge([
+            'shopId' => $this->getShopId(),
+            'scid'   => $this->getScid(),
+        ], $params));
 
         $headers = $this->parseHeaders($response);
 
