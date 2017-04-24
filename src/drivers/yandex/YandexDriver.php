@@ -277,7 +277,7 @@ class YandexDriver implements PayService
      */
     public function getNotificationResponse($errorCode = null)
     {
-        return $this->getTransport()->getNotificationResponse($this->response, $errorCode !== null ?: $this->getLastError());
+        return $this->getTransport()->getNotificationResponse($this->response, $errorCode !== null ? $errorCode : $this->getLastError());
     }
 
     /**
@@ -289,7 +289,7 @@ class YandexDriver implements PayService
      */
     public function getCheckResponse($errorCode = null)
     {
-        return $this->getTransport()->getCheckResponse($this->response, $errorCode !== null ?: $this->getLastError());
+        return $this->getTransport()->getCheckResponse($this->response, $errorCode !== null ? $errorCode : $this->getLastError());
     }
 
     /**
