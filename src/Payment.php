@@ -1,6 +1,5 @@
 <?php namespace professionalweb\payment;
 
-use Illuminate\Support\Facades\Facade;
 use professionalweb\payment\contracts\PayProtocol;
 use professionalweb\payment\contracts\PayService;
 
@@ -8,7 +7,7 @@ use professionalweb\payment\contracts\PayService;
  * Payment facade
  * @package professionalweb\payment
  */
-class Payment extends Facade implements PayService
+class Payment implements PayService
 {
     /**
      * Available drivers
@@ -25,21 +24,11 @@ class Payment extends Facade implements PayService
     private $currentDriver;
 
     /**
-     * Get the registered name of the component.
-     *
-     * @return string
-     */
-    protected static function getFacadeAccessor()
-    {
-        return 'payment';
-    }
-
-    /**
      * Pay
      *
-     * @param int    $orderId
-     * @param int    $paymentId
-     * @param float  $amount
+     * @param int $orderId
+     * @param int $paymentId
+     * @param float $amount
      * @param string $currency
      * @param string $successReturnUrl
      * @param string $failReturnUrl
