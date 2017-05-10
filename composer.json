@@ -1,6 +1,6 @@
 {
   "name": "professionalweb/payment-laravel",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Payment drivers for laravel",
   "homepage": "http://web-development.pw/",
   "keywords": [
@@ -11,6 +11,7 @@
     "payment system",
     "payonline",
     "tinkoff",
+    "yandex.kassa",
     "laravel"
   ],
   "minimum-stability": "stable",
