@@ -12,8 +12,9 @@ Project structure
 ```
 contracts/          Abstractions
 drivers/            Payment drivers
-    payonline/      [PayOnline](https://payonline.ru/education/terms/) driver
-    tinkoff/        [Tinkoff](https://oplata.tinkoff.ru/documentation/) driver
+    payonline/      PayOnline driver - https://payonline.ru/education/terms/
+    tinkoff/        Tinkoff driver - https://oplata.tinkoff.ru/documentation/
+    yandex/         Yandex.Kassa driver - https://tech.yandex.ru/money/doc/payment-solution/payment-notifications/payment-notifications-about-docpage/
 ```
 
 
@@ -36,7 +37,7 @@ composer require professionalweb/payment-laravel "dev-master"
 Alternatively you can add the following to the `require` section in your `composer.json` manually:
 
 ```json
-"professionalweb/payment-laravel": "dev-master"
+"professionalweb/payment-laravel": "*"
 ```
 Run `composer update` afterwards.
 
@@ -79,6 +80,17 @@ return [
 ];
 ```
 
+Yandex.Kassa:
+```php
+return [
+    'providers' => [
+        ...
+        \professionalweb\payment\YandexProvider::class,
+        ...
+    ],
+];
+```
+
 ##config/payment.php
 ```php
 <?php
@@ -96,6 +108,14 @@ return [
         'secretKey'  => env('PAYONLINE_SECRET_KEY'),
         'successURL' => env('PAYONLINE_SUCCESS_URL', '/'),
         'failURL'    => env('PAYONLINE_FAIL_URL', '/'),
+    ],
+    'yandex'      => [
+        'merchantId' => env('YANDEX_SHOP_ID'),
+        'scid'       => env('YANDEX_SCID'),
+        'secretKey'  => env('YANDEX_SECRET_KEY'),
+        'successURL' => env('YANDEX_SUCCESS_URL', '/'),
+        'failURL'    => env('YANDEX_FAIL_URL', '/'),
+        'isTest'     => false,
     ],
 ];
 ```
