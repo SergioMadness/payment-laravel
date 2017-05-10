@@ -1,5 +1,11 @@
 <?php namespace professionalweb\payment\contracts;
 
+use Illuminate\Http\Response;
+
+/**
+ * Interface payment service
+ * @package professionalweb\payment\contracts
+ */
 interface PayService
 {
     /**
@@ -109,4 +115,38 @@ interface PayService
      * @return string
      */
     public function getDateTime();
+
+    /**
+     * Set transport/protocol wrapper
+     *
+     * @param PayProtocol $protocol
+     *
+     * @return $this
+     */
+    public function setTransport(PayProtocol $protocol);
+
+    /**
+     * Prepare response on notification request
+     *
+     * @param int $errorCode
+     *
+     * @return Response
+     */
+    public function getNotificationResponse($errorCode = null);
+
+    /**
+     * Prepare response on check request
+     *
+     * @param int $errorCode
+     *
+     * @return Response
+     */
+    public function getCheckResponse($errorCode = null);
+
+    /**
+     * Get last error code
+     *
+     * @return int
+     */
+    public function getLastError();
 }

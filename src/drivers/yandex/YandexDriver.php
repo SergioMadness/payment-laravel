@@ -1,20 +1,33 @@
-<?php namespace professionalweb\payment\drivers\payonline;
+<?php namespace professionalweb\payment\drivers\yandex;
 
-use professionalweb\payment\contracts\PayService;
 use professionalweb\payment\contracts\PayProtocol;
+use professionalweb\payment\contracts\PayService;
 
 /**
  * Payment service. Pay, Check, etc
  * @package AlpinaDigital\Services
  */
-class PayOnlineDriver implements PayService
+class YandexDriver implements PayService
 {
     /**
-     * Payonline object
-     *
-     * @var PayProtocol
+     * All right
      */
-    private $transport;
+    const CODE_SUCCESS = 0;
+
+    /**
+     * Signature is corrupted
+     */
+    const CODE_CORRUPTED_SIGN = 1;
+
+    /**
+     * Order not found
+     */
+    const CODE_ORDER_NOT_FOUND = 100;
+
+    /**
+     * Can't understand request
+     */
+    const CODE_BAD_PARAMS = 200;
 
     /**
      * Module config
@@ -30,6 +43,18 @@ class PayOnlineDriver implements PayService
      */
     protected $response;
 
+    /**
+     * @var PayProtocol
+     */
+    private $transport;
+
+    /**
+     * Last error code
+     *
+     * @var int
+     */
+    private $lastError = 0;
+
     public function __construct($config)
     {
         $this->setConfig($config);
@@ -38,41 +63,31 @@ class PayOnlineDriver implements PayService
     /**
      * Pay
      *
-     * @param int    $orderId
-     * @param int    $paymentId
-     * @param float  $amount
-     * @param string $currency
-     * @param string $successReturnUrl
-     * @param string $failReturnUrl
-     * @param string $description
+     * @param int        $orderId
+     * @param int        $paymentId
+     * @param float      $amount
+     * @param int|string $currency
+     * @param string     $successReturnUrl
+     * @param string     $failReturnUrl
+     * @param string     $description
      *
      * @return string
+     * @throws \Exception
      */
     public function getPaymentLink($orderId,
                                    $paymentId,
                                    $amount,
-                                   $currency = self::CURRENCY_RUR,
+                                   $currency = self::CURRENCY_RUR_ISO,
                                    $successReturnUrl = '',
                                    $failReturnUrl = '',
                                    $description = '')
     {
-        if (empty($successReturnUrl)) {
-            $successReturnUrl = $this->getConfig()['successURL'];
-        }
-        if (empty($failReturnUrl)) {
-            $failReturnUrl = $this->getConfig()['failURL'];
-        }
-        $data = [
-            'OrderId'          => $orderId,
-            'Amount'           => number_format(round($amount, 2), 2, '.', ''),
-            'Currency'         => $currency,
-            'OrderDescription' => $description,
-            'PaymentId'        => $paymentId,
-            'ReturnUrl'        => $successReturnUrl,
-            'FailUrl'          => $failReturnUrl,
-        ];
-
-        return $this->getTransport()->getPaymentUrl($data);
+        return $this->getTransport()->getPaymentUrl([
+            'orderNumber'    => $orderId,
+            'customerNumber' => $orderId,
+            'sum'            => $amount,
+            'PaymentId'      => $paymentId,
+        ]);
     }
 
     /**
@@ -84,31 +99,7 @@ class PayOnlineDriver implements PayService
      */
     public function validate($data)
     {
-        return $this->getTransport()->validate($data);
-    }
-
-    /**
-     * Set transport
-     *
-     * @param PayProtocol $transport
-     *
-     * @return $this
-     */
-    public function setTransport(PayProtocol $transport)
-    {
-        $this->transport = $transport;
-
-        return $this;
-    }
-
-    /**
-     * Get protocol wrapper
-     *
-     * @return PayProtocol
-     */
-    public function getTransport()
-    {
-        return $this->transport;
+        return ($this->lastError = $this->getTransport()->validate($data)) === 0;
     }
 
     /**
@@ -144,6 +135,7 @@ class PayOnlineDriver implements PayService
      */
     public function setResponse($data)
     {
+        $data['DateTime'] = date('Y-m-d H:i:s');
         $this->response = $data;
 
         return $this;
@@ -169,7 +161,7 @@ class PayOnlineDriver implements PayService
      */
     public function getOrderId()
     {
-        return $this->getResponseParam('OrderId');
+        return $this->getResponseParam('orderNumber');
     }
 
     /**
@@ -179,7 +171,7 @@ class PayOnlineDriver implements PayService
      */
     public function getStatus()
     {
-        return $this->getResponseParam('Code');
+        return null;
     }
 
     /**
@@ -189,7 +181,7 @@ class PayOnlineDriver implements PayService
      */
     public function isSuccess()
     {
-        return $this->getResponseParam('ErrorCode', 1) == 0;
+        return $this->getResponseParam('action', 'cancelOrder') !== 'cancelOrder';
     }
 
     /**
@@ -199,7 +191,7 @@ class PayOnlineDriver implements PayService
      */
     public function getTransactionId()
     {
-        return $this->getResponseParam('TransactionID');
+        return $this->getResponseParam('invoiceId');
     }
 
     /**
@@ -209,7 +201,7 @@ class PayOnlineDriver implements PayService
      */
     public function getAmount()
     {
-        return $this->getResponseParam('Amount');
+        return $this->getResponseParam('orderSumAmount');
     }
 
     /**
@@ -219,7 +211,7 @@ class PayOnlineDriver implements PayService
      */
     public function getErrorCode()
     {
-        return $this->getResponseParam('ErrorCode');
+        return $this->getResponseParam('action', 'cancelOrder') !== 'cancelOrder' ? 0 : 1;
     }
 
     /**
@@ -229,7 +221,7 @@ class PayOnlineDriver implements PayService
      */
     public function getProvider()
     {
-        return $this->getResponseParam('Provider');
+        return $this->getResponseParam('paymentType');
     }
 
     /**
@@ -239,7 +231,7 @@ class PayOnlineDriver implements PayService
      */
     public function getPan()
     {
-        return $this->getResponseParam('CardNumber');
+        return $this->getResponseParam('cdd_pan_mask');
     }
 
     /**
@@ -253,6 +245,30 @@ class PayOnlineDriver implements PayService
     }
 
     /**
+     * Get transport
+     *
+     * @return PayProtocol
+     */
+    public function getTransport()
+    {
+        return $this->transport;
+    }
+
+    /**
+     * Set transport
+     *
+     * @param PayProtocol $transport
+     *
+     * @return $this
+     */
+    public function setTransport(PayProtocol $transport)
+    {
+        $this->transport = $transport;
+
+        return $this;
+    }
+
+    /**
      * Prepare response on notification request
      *
      * @param int $errorCode
@@ -261,7 +277,7 @@ class PayOnlineDriver implements PayService
      */
     public function getNotificationResponse($errorCode = null)
     {
-        return $this->getTransport()->getNotificationResponse($this->response, $errorCode);
+        return $this->getTransport()->getNotificationResponse($this->response, $errorCode !== null ? $errorCode : $this->getLastError());
     }
 
     /**
@@ -273,7 +289,7 @@ class PayOnlineDriver implements PayService
      */
     public function getCheckResponse($errorCode = null)
     {
-        return $this->getTransport()->getNotificationResponse($this->response, $errorCode);
+        return $this->getTransport()->getCheckResponse($this->response, $errorCode !== null ? $errorCode : $this->getLastError());
     }
 
     /**
@@ -283,6 +299,7 @@ class PayOnlineDriver implements PayService
      */
     public function getLastError()
     {
-        return 0;
+        return $this->lastError;
     }
+
 }
