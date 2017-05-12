@@ -1,7 +1,7 @@
 <?php namespace professionalweb\payment;
 
-use professionalweb\payment\contracts\PayProtocol;
 use professionalweb\payment\contracts\PayService;
+use professionalweb\payment\contracts\PayProtocol;
 
 /**
  * Payment facade
@@ -33,6 +33,7 @@ class Payment implements PayService
      * @param string $successReturnUrl
      * @param string $failReturnUrl
      * @param string $description
+     * @param array $extraParams
      *
      * @return string
      */
@@ -42,7 +43,8 @@ class Payment implements PayService
                                    $currency = self::CURRENCY_RUR,
                                    $successReturnUrl = '',
                                    $failReturnUrl = '',
-                                   $description = '')
+                                   $description = '',
+                                   $extraParams = [])
     {
         return $this->getCurrentDriver()->getPaymentLink($orderId,
             $paymentId,
@@ -50,7 +52,8 @@ class Payment implements PayService
             $currency,
             $successReturnUrl,
             $failReturnUrl,
-            $description);
+            $description,
+            $extraParams);
     }
 
     /**
@@ -300,5 +303,16 @@ class Payment implements PayService
     public function getLastError()
     {
         $this->getCurrentDriver()->getLastError();
+    }
+
+    /**
+     * Get param by name
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public function getParam($name)
+    {
+        return $this->getParam($name);
     }
 }

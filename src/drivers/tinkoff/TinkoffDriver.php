@@ -1,8 +1,8 @@
 <?php namespace professionalweb\payment\drivers\tinkoff;
 
 use Alcohol\ISO4217;
-use professionalweb\payment\contracts\PayProtocol;
 use professionalweb\payment\contracts\PayService;
+use professionalweb\payment\contracts\PayProtocol;
 
 /**
  * Payment service. Pay, Check, etc
@@ -39,13 +39,14 @@ class TinkoffDriver implements PayService
     /**
      * Pay
      *
-     * @param int        $orderId
-     * @param int        $paymentId
-     * @param float      $amount
+     * @param int $orderId
+     * @param int $paymentId
+     * @param float $amount
      * @param int|string $currency
-     * @param string     $successReturnUrl
-     * @param string     $failReturnUrl
-     * @param string     $description
+     * @param string $successReturnUrl
+     * @param string $failReturnUrl
+     * @param string $description
+     * @param array $extraParams
      *
      * @return string
      * @throws \Exception
@@ -56,15 +57,16 @@ class TinkoffDriver implements PayService
                                    $currency = self::CURRENCY_RUR_ISO,
                                    $successReturnUrl = '',
                                    $failReturnUrl = '',
-                                   $description = '')
+                                   $description = '',
+                                   $extraParams = [])
     {
-        $data = [
-            'OrderId'     => $orderId,
-            'Amount'      => round($amount * 100),
-            'Currency'    => (new ISO4217())->getByAlpha3($currency)['numeric'],
+        $data = array_merge([
+            'OrderId' => $orderId,
+            'Amount' => round($amount * 100),
+            'Currency' => (new ISO4217())->getByAlpha3($currency)['numeric'],
             'Description' => $description,
-            'DATA'        => 'PaymentId=' . $paymentId,
-        ];
+            'DATA' => 'PaymentId=' . $paymentId,
+        ], $extraParams);
 
         $paymentUrl = $this->getTransport()->getPaymentUrl($data);
 
@@ -283,5 +285,16 @@ class TinkoffDriver implements PayService
     public function getLastError()
     {
         return 0;
+    }
+
+    /**
+     * Get param by name
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public function getParam($name)
+    {
+        return $this->getResponseParam($name);
     }
 }
