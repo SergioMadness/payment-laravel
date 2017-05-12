@@ -60,13 +60,21 @@ class TinkoffDriver implements PayService
                                    $description = '',
                                    $extraParams = [])
     {
-        $data = array_merge([
+        $extraParams['PaymentId'] = $paymentId;
+        $DATA = '';
+        array_walk($extraParams, function ($val, $key) use (&$DATA) {
+            if ($DATA != '') {
+                $DATA .= '|';
+            }
+            $DATA .= $key . '=' . $val;
+        });
+        $data = [
             'OrderId' => $orderId,
             'Amount' => round($amount * 100),
             'Currency' => (new ISO4217())->getByAlpha3($currency)['numeric'],
             'Description' => $description,
-            'DATA' => 'PaymentId=' . $paymentId,
-        ], $extraParams);
+            'DATA' => $DATA,
+        ];
 
         $paymentUrl = $this->getTransport()->getPaymentUrl($data);
 
