@@ -1,7 +1,7 @@
 <?php namespace professionalweb\payment\drivers\yandex;
 
-use professionalweb\payment\contracts\PayProtocol;
 use professionalweb\payment\contracts\PayService;
+use professionalweb\payment\contracts\PayProtocol;
 
 /**
  * Payment service. Pay, Check, etc
@@ -63,13 +63,14 @@ class YandexDriver implements PayService
     /**
      * Pay
      *
-     * @param int        $orderId
-     * @param int        $paymentId
-     * @param float      $amount
+     * @param int $orderId
+     * @param int $paymentId
+     * @param float $amount
      * @param int|string $currency
-     * @param string     $successReturnUrl
-     * @param string     $failReturnUrl
-     * @param string     $description
+     * @param string $successReturnUrl
+     * @param string $failReturnUrl
+     * @param string $description
+     * @param array $extraParams
      *
      * @return string
      * @throws \Exception
@@ -80,14 +81,15 @@ class YandexDriver implements PayService
                                    $currency = self::CURRENCY_RUR_ISO,
                                    $successReturnUrl = '',
                                    $failReturnUrl = '',
-                                   $description = '')
+                                   $description = '',
+                                   $extraParams = [])
     {
-        return $this->getTransport()->getPaymentUrl([
-            'orderNumber'    => $orderId,
+        return $this->getTransport()->getPaymentUrl(array_merge([
+            'orderNumber' => $orderId,
             'customerNumber' => $orderId,
-            'sum'            => $amount,
-            'PaymentId'      => $paymentId,
-        ]);
+            'sum' => $amount,
+            'PaymentId' => $paymentId,
+        ], $extraParams));
     }
 
     /**
@@ -302,4 +304,14 @@ class YandexDriver implements PayService
         return $this->lastError;
     }
 
+    /**
+     * Get param by name
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public function getParam($name)
+    {
+        return $this->getResponseParam($name);
+    }
 }

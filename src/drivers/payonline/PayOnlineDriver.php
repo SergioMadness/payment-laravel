@@ -38,13 +38,14 @@ class PayOnlineDriver implements PayService
     /**
      * Pay
      *
-     * @param int    $orderId
-     * @param int    $paymentId
-     * @param float  $amount
+     * @param int $orderId
+     * @param int $paymentId
+     * @param float $amount
      * @param string $currency
      * @param string $successReturnUrl
      * @param string $failReturnUrl
      * @param string $description
+     * @param array $extraParams
      *
      * @return string
      */
@@ -54,7 +55,8 @@ class PayOnlineDriver implements PayService
                                    $currency = self::CURRENCY_RUR,
                                    $successReturnUrl = '',
                                    $failReturnUrl = '',
-                                   $description = '')
+                                   $description = '',
+                                   $extraParams = [])
     {
         if (empty($successReturnUrl)) {
             $successReturnUrl = $this->getConfig()['successURL'];
@@ -62,15 +64,15 @@ class PayOnlineDriver implements PayService
         if (empty($failReturnUrl)) {
             $failReturnUrl = $this->getConfig()['failURL'];
         }
-        $data = [
-            'OrderId'          => $orderId,
-            'Amount'           => number_format(round($amount, 2), 2, '.', ''),
-            'Currency'         => $currency,
+        $data = array_merge([
+            'OrderId' => $orderId,
+            'Amount' => number_format(round($amount, 2), 2, '.', ''),
+            'Currency' => $currency,
             'OrderDescription' => $description,
-            'PaymentId'        => $paymentId,
-            'ReturnUrl'        => $successReturnUrl,
-            'FailUrl'          => $failReturnUrl,
-        ];
+            'PaymentId' => $paymentId,
+            'ReturnUrl' => $successReturnUrl,
+            'FailUrl' => $failReturnUrl,
+        ], $extraParams);
 
         return $this->getTransport()->getPaymentUrl($data);
     }
@@ -284,5 +286,16 @@ class PayOnlineDriver implements PayService
     public function getLastError()
     {
         return 0;
+    }
+
+    /**
+     * Get param by name
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public function getParam($name)
+    {
+        return $this->getResponseParam($name);
     }
 }
