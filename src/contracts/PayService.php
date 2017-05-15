@@ -17,13 +17,14 @@ interface PayService
     /**
      * Pay
      *
-     * @param int    $orderId
-     * @param int    $paymentId
-     * @param float  $amount
+     * @param int $orderId
+     * @param int $paymentId
+     * @param float $amount
      * @param string $currency
      * @param string $successReturnUrl
      * @param string $failReturnUrl
      * @param string $description
+     * @param array $extraParams
      *
      * @return string
      */
@@ -33,7 +34,8 @@ interface PayService
                                    $currency = self::CURRENCY_RUR,
                                    $successReturnUrl = '',
                                    $failReturnUrl = '',
-                                   $description = '');
+                                   $description = '',
+                                   $extraParams = []);
 
     /**
      * Validate request
@@ -149,4 +151,12 @@ interface PayService
      * @return int
      */
     public function getLastError();
+
+    /**
+     * Get param by name
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public function getParam($name);
 }
