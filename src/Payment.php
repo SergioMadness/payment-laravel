@@ -2,12 +2,13 @@
 
 use professionalweb\payment\contracts\PayService;
 use professionalweb\payment\contracts\PayProtocol;
+use professionalweb\payment\contracts\PaymentFacade;
 
 /**
  * Payment facade
  * @package professionalweb\payment
  */
-class Payment implements PayService
+class Payment implements PaymentFacade
 {
     /**
      * Available drivers
@@ -24,16 +25,23 @@ class Payment implements PayService
     private $currentDriver;
 
     /**
+     * Name of current driver
+     *
+     * @var string
+     */
+    private $currentDriverName;
+
+    /**
      * Pay
      *
-     * @param int $orderId
-     * @param int $paymentId
-     * @param float $amount
+     * @param int    $orderId
+     * @param int    $paymentId
+     * @param float  $amount
      * @param string $currency
      * @param string $successReturnUrl
      * @param string $failReturnUrl
      * @param string $description
-     * @param array $extraParams
+     * @param array  $extraParams
      *
      * @return string
      */
@@ -128,6 +136,22 @@ class Payment implements PayService
      */
     public function setCurrentDriver($name)
     {
+        $this->currentDriverName = $name;
+
+        $this->makeCurrentDriver($name);
+
+        return $this;
+    }
+
+    /**
+     * Build driver
+     *
+     * @param string $name
+     *
+     * @return $this
+     */
+    protected function makeCurrentDriver($name)
+    {
         $this->currentDriver = \App::make($this->getDriver($name), [
             'config' => config('payment.' . $name),
         ]);
@@ -143,6 +167,16 @@ class Payment implements PayService
     public function getCurrentDriver()
     {
         return $this->currentDriver;
+    }
+
+    /**
+     * Get name of current driver
+     *
+     * @return string
+     */
+    public function getDriverName()
+    {
+        return $this->currentDriverName;
     }
 
     /**
@@ -309,10 +343,21 @@ class Payment implements PayService
      * Get param by name
      *
      * @param string $name
+     *
      * @return mixed
      */
     public function getParam($name)
     {
         return $this->getParam($name);
+    }
+
+    /**
+     * Get name of payment service
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->getCurrentDriver()->getName();
     }
 }

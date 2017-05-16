@@ -1,6 +1,7 @@
 <?php namespace professionalweb\payment;
 
 use Illuminate\Support\ServiceProvider;
+use professionalweb\payment\contracts\PaymentFacade;
 use professionalweb\payment\contracts\PayService;
 use professionalweb\payment\drivers\yandex\YandexDriver;
 use professionalweb\payment\drivers\tinkoff\TinkoffDriver;
@@ -38,6 +39,9 @@ class PaymentProvider extends ServiceProvider
             return $this->getFacade();
         });
         $this->app->bind('\Payment', function ($app) {
+            return $this->getFacade();
+        });
+        $this->app->bind(PaymentFacade::class, function ($app) {
             return $this->getFacade();
         });
     }

@@ -63,14 +63,14 @@ class YandexDriver implements PayService
     /**
      * Pay
      *
-     * @param int $orderId
-     * @param int $paymentId
-     * @param float $amount
+     * @param int        $orderId
+     * @param int        $paymentId
+     * @param float      $amount
      * @param int|string $currency
-     * @param string $successReturnUrl
-     * @param string $failReturnUrl
-     * @param string $description
-     * @param array $extraParams
+     * @param string     $successReturnUrl
+     * @param string     $failReturnUrl
+     * @param string     $description
+     * @param array      $extraParams
      *
      * @return string
      * @throws \Exception
@@ -85,10 +85,10 @@ class YandexDriver implements PayService
                                    $extraParams = [])
     {
         return $this->getTransport()->getPaymentUrl(array_merge([
-            'orderNumber' => $orderId,
+            'orderNumber'    => $orderId,
             'customerNumber' => $orderId,
-            'sum' => $amount,
-            'PaymentId' => $paymentId,
+            'sum'            => $amount,
+            'PaymentId'      => $paymentId,
         ], $extraParams));
     }
 
@@ -308,10 +308,21 @@ class YandexDriver implements PayService
      * Get param by name
      *
      * @param string $name
+     *
      * @return mixed
      */
     public function getParam($name)
     {
         return $this->getResponseParam($name);
+    }
+
+    /**
+     * Get name of payment service
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return 'yandex';
     }
 }

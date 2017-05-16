@@ -38,14 +38,14 @@ class PayOnlineDriver implements PayService
     /**
      * Pay
      *
-     * @param int $orderId
-     * @param int $paymentId
-     * @param float $amount
+     * @param int    $orderId
+     * @param int    $paymentId
+     * @param float  $amount
      * @param string $currency
      * @param string $successReturnUrl
      * @param string $failReturnUrl
      * @param string $description
-     * @param array $extraParams
+     * @param array  $extraParams
      *
      * @return string
      */
@@ -65,13 +65,13 @@ class PayOnlineDriver implements PayService
             $failReturnUrl = $this->getConfig()['failURL'];
         }
         $data = array_merge([
-            'OrderId' => $orderId,
-            'Amount' => number_format(round($amount, 2), 2, '.', ''),
-            'Currency' => $currency,
+            'OrderId'          => $orderId,
+            'Amount'           => number_format(round($amount, 2), 2, '.', ''),
+            'Currency'         => $currency,
             'OrderDescription' => $description,
-            'PaymentId' => $paymentId,
-            'ReturnUrl' => $successReturnUrl,
-            'FailUrl' => $failReturnUrl,
+            'PaymentId'        => $paymentId,
+            'ReturnUrl'        => $successReturnUrl,
+            'FailUrl'          => $failReturnUrl,
         ], $extraParams);
 
         return $this->getTransport()->getPaymentUrl($data);
@@ -292,10 +292,21 @@ class PayOnlineDriver implements PayService
      * Get param by name
      *
      * @param string $name
+     *
      * @return mixed
      */
     public function getParam($name)
     {
         return $this->getResponseParam($name);
+    }
+
+    /**
+     * Get name of payment service
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return 'payonline';
     }
 }
