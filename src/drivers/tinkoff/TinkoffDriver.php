@@ -305,4 +305,14 @@ class TinkoffDriver implements PayService
     {
         return $this->getResponseParam($name);
     }
+
+    /**
+     * Get name of payment service
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return 'tinkoff';
+    }
 }
