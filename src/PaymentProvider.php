@@ -62,6 +62,6 @@ class PaymentProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['\Payment', PayService::class];
+        return ['\Payment', PayService::class, PaymentFacade::class];
     }
 }
