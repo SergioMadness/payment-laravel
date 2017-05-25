@@ -37,7 +37,7 @@ composer require professionalweb/payment-laravel "dev-master"
 Alternatively you can add the following to the `require` section in your `composer.json` manually:
 
 ```json
-"professionalweb/payment-laravel": "*"
+"professionalweb/payment-laravel": "^2.1"
 ```
 Run `composer update` afterwards.
 
