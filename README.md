@@ -15,6 +15,7 @@ drivers/            Payment drivers
     payonline/      PayOnline driver - https://payonline.ru/education/terms/
     tinkoff/        Tinkoff driver - https://oplata.tinkoff.ru/documentation/
     yandex/         Yandex.Kassa driver - https://tech.yandex.ru/money/doc/payment-solution/payment-notifications/payment-notifications-about-docpage/
+facades/            Payment facade
 ```
 
 
@@ -89,6 +90,27 @@ return [
         ...
     ],
 ];
+```
+
+To send receipt to IRS
+```php
+/**
+ * Prepare Receipt
+ *
+ * @param Order $order
+ *
+ * @return Receipt
+ */
+public function prepareReceipt(Order $order)
+{
+    $receipt = new Receipt($order->user->email);
+    /** @var Item $item */
+    foreach ($order->items as $item) {
+        $receipt->addItem(new ReceiptItem($item->name, $item->qty, $item->price, config('payment.tax')));
+    }
+
+    return $receipt;
+}
 ```
 
 ##config/payment.php
