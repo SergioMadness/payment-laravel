@@ -45,7 +45,7 @@ class YandexKassa implements PayProtocol
     private $shopPassword;
 
     /**
-     * YandexKassa constructor.
+     * Yandex.Kassa constructor.
      *
      * @param int    $shopId
      * @param int    $scid
