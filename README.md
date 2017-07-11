@@ -139,6 +139,15 @@ return [
         'failURL'    => env('YANDEX_FAIL_URL', '/'),
         'isTest'     => false,
     ],
+    'tax'            => \professionalweb\payment\drivers\yandex\ReceiptItem::TAX_VAT_18,
+    'applePay'       => [
+        'merchantId'             => env('APPLEPAY_MERCHANT_ID'),
+        'certificatePath'        => env('APPLEPAY_CERTIFICATE_PATH'),
+        'keyPath'                => env('APPLEPAY_KEY_PATH'),
+        'keyPassword'            => env('APPLEPAY_KEY_PASSWORD'),
+        'domain'                 => env('APPLEPAY_DOMAIN'),
+        'displayName'            => env('APPLEPAY_DISPLAY_NAME'),
+    ],
 ];
 ```
 
@@ -185,6 +194,66 @@ public function responseHandler(PayService $paymentService) {
 ```
 
 
+ApplePay session start:
+```php
+<?php
+
+use professionalweb\payment\contracts\ApplePayService;
+
+/**
+ * Start session for ApplePay
+ *
+ * @param ApplePayService $applePayService
+ *
+ * @return Response
+ */
+public function applePayStartSession(ApplePayService $applePayService)
+{
+    $url = $this->getRequest()->get('url', \Config::get('payment.applePay.defaultSessionStartURL'));
+    if (empty($url)) {
+        throw new BadRequestHttpException('Need start session URL');
+    }
+
+    try {
+        return response($applePayService->startSession($url));
+    } catch (\Exception $ex) {
+        throw new BadRequestHttpException('Can not validate merchant');
+    }
+}
+```
+
+ApplePay payment:
+```php
+<?php
+
+use professionalweb\payment\contracts\ApplePayService;
+
+/**
+ * Pay through Digital Secure Remote Payment (DSRP)
+ *
+ * @param int $orderId
+ * @param ApplePayService $applePayService
+ *
+ * @return JsonResponse
+ */
+public function dsrp($orderId, ApplePayService $applePayService)
+{
+    $order = $this->getOrder($orderId);
+    $userId = $this->getUserId();
+    
+    $paymentToken = $this->getRequest()->get('paymentToken');
+    if (empty($paymentToken)) {
+        throw new BadRequestHttpException("Token required");
+    }
+
+    $orderAmount = $order->getAmount();
+
+    $payResult = $applePayService->pay($order->id . '_' . $order->purpose_id, $userId, $orderAmount, $paymentToken);
+
+    return $this->jsonResponse($payResult);
+}
+
+```
 
 The MIT License (MIT)
 ---------------------

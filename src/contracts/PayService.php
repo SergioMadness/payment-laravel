@@ -15,6 +15,18 @@ interface PayService
     const CURRENCY_RUR_ISO = 643;
 
     /**
+     * US dollar
+     */
+    const CURRENCY_USD = 'USD';
+    const CURRENCY_USD_ISO = 840;
+
+    /**
+     * Euro
+     */
+    const CURRENCY_EUR = 'EUR';
+    const CURRENCY_EUR_ISO = 978;
+
+    /**
      * Get name of payment service
      *
      * @return string
