@@ -1,11 +1,12 @@
 <?php namespace professionalweb\payment;
 
 use Illuminate\Support\ServiceProvider;
-use professionalweb\payment\contracts\ApplePayService;
 use professionalweb\payment\contracts\PayService;
-use professionalweb\payment\drivers\yandex\ApplePay;
+use professionalweb\payment\contracts\ApplePayService;
+use professionalweb\payment\drivers\yandex\payments\YandexPayment;
 use professionalweb\payment\drivers\yandex\YandexKassa;
 use professionalweb\payment\drivers\yandex\YandexDriver;
+use professionalweb\payment\drivers\yandex\payments\ApplePay;
 
 
 /**
@@ -45,6 +46,7 @@ class YandexProvider extends ServiceProvider
         });
         $this->app->singleton(ApplePayService::class, function ($app) {
             return (new ApplePay())
+                ->setProtocol((new YandexPayment())->setIsTest((bool)config('payment.yandex.isTest'))->setPathToPrivateKey(config('payment.yandex.privateKey'))->setPrivateKeyPassword(config('payment.yandex.privateKeyPassword'))->setShopId(config('payment.yandex.scid')))
                 ->setCertificatePath(\Config::get('payment.applePay.certificatePath'))
                 ->setKeyPath(\Config::get('payment.applePay.keyPath'))
                 ->setKeyPassword(\Config::get('payment.applePay.keyPassword'))

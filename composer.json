@@ -32,7 +32,9 @@
   },
   "require": {
     "illuminate/support": ">=5.2",
-    "alcohol/iso4217": "*"
+    "alcohol/iso4217": "*",
+    "namshi/jose": "7.0.*",
+    "phpseclib/phpseclib": "~2.0"
   },
   "require-dev": {
     "codeception/codeception": "*",

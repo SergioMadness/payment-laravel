@@ -1,8 +1,6 @@
-<?php namespace professionalweb\payment\abstraction;
+<?php namespace professionalweb\payment\traits;
 
-use professionalweb\payment\contracts\ApplePayService;
-
-abstract class ApplePay implements ApplePayService
+trait ApplePaySessionStart
 {
     /**
      * Merchant ID

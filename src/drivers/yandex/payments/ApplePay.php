@@ -1,17 +1,28 @@
-<?php namespace professionalweb\payment\drivers\yandex;
+<?php namespace professionalweb\payment\drivers\yandex\payments;
 
 use professionalweb\payment\contracts\PayService;
+use professionalweb\payment\contracts\ApplePayService;
+use professionalweb\payment\traits\ApplePaySessionStart;
+use professionalweb\payment\drivers\yandex\contracts\YandexPayment;
 
 /**
  * Realisation for Yandex.Kassa
  * @package professionalweb\payment\drivers\yandex
  */
-class ApplePay extends \professionalweb\payment\abstraction\ApplePay
+class ApplePay implements ApplePayService
 {
+
+    use ApplePaySessionStart;
+
     /**
      * Payment method URL
      */
-    const URL_PAYMENT = 'https://money.yandex.ru/api/v2/payments/dsrpWallet';
+    const URL_PAYMENT = 'https://payment.yandex.net/api/v2/version';
+
+    /**
+     * @var YandexPayment
+     */
+    private $protocol;
 
     /**
      * Pay through by ApplePay token
@@ -51,16 +62,32 @@ class ApplePay extends \professionalweb\payment\abstraction\ApplePay
             'paymentData' => $paymentToken,
         ];
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
-        if (($result = curl_exec($ch)) === false) {
-            throw new \Exception(curl_error($ch));
-        }
-        // close cURL resource, and free up system resources
-        curl_close($ch);
+        return $this->getProtocol()->drsp($data);
     }
+
+    /**
+     * Get protocol wrapper
+     *
+     * @return YandexPayment
+     */
+    public function getProtocol()
+    {
+        return $this->protocol;
+    }
+
+    /**
+     * Set protocol wrapper
+     *
+     * @param YandexPayment $protocol
+     *
+     * @return $this
+     */
+    public function setProtocol(YandexPayment $protocol)
+    {
+        $this->protocol = $protocol;
+
+        return $this;
+    }
+
+
 }
