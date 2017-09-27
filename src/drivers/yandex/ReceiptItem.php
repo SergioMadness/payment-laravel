@@ -223,7 +223,7 @@ class ReceiptItem implements Arrayable
             ],
             'currency' => $this->getCurrency(),
             'tax'      => $this->getTax(),
-            'text'     => $this->getName(),
+            'text'     => mb_substr($this->getName(), 0, 128),
         ];
     }
 }
