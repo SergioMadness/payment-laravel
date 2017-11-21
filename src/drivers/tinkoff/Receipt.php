@@ -77,7 +77,7 @@ class Receipt implements Arrayable
      */
     public function __construct($phone = null, $email = null, array $items = [], $taxSystem = null)
     {
-        $this->setContact($contact)->setItems($items)->setTaxSystem($taxSystem);
+        $this->setPhone($phone)->setEmail($email)->setItems($items)->setTaxSystem($taxSystem);
     }
 
     /**
