@@ -71,6 +71,7 @@ class YandexDriver implements PayService
      * @param string     $failReturnUrl
      * @param string     $description
      * @param array      $extraParams
+     * @param object      $receipt
      *
      * @return string
      * @throws \Exception
@@ -82,7 +83,8 @@ class YandexDriver implements PayService
                                    $successReturnUrl = '',
                                    $failReturnUrl = '',
                                    $description = '',
-                                   $extraParams = [])
+                                   $extraParams = [],
+                                   $receipt = null)
     {
         return $this->getTransport()->getPaymentUrl(array_merge([
             'orderNumber'    => $orderId,

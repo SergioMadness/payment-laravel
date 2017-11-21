@@ -47,6 +47,7 @@ class TinkoffDriver implements PayService
      * @param string $failReturnUrl
      * @param string $description
      * @param array $extraParams
+     * @param Receipt $receipt
      *
      * @return string
      * @throws \Exception
@@ -58,7 +59,8 @@ class TinkoffDriver implements PayService
                                    $successReturnUrl = '',
                                    $failReturnUrl = '',
                                    $description = '',
-                                   $extraParams = [])
+                                   $extraParams = [],
+                                   $receipt = null)
     {
         $extraParams['PaymentId'] = $paymentId;
         $DATA = '';
@@ -74,6 +76,7 @@ class TinkoffDriver implements PayService
             'Currency' => (new ISO4217())->getByAlpha3($currency)['numeric'],
             'Description' => $description,
             'DATA' => $DATA,
+            'Receipt' => $receipt->toArray(),
         ];
 
         $paymentUrl = $this->getTransport()->getPaymentUrl($data);

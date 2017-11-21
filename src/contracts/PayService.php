@@ -32,6 +32,7 @@ interface PayService
      * @param string $failReturnUrl
      * @param string $description
      * @param array  $extraParams
+     * @param object $receipt
      *
      * @return string
      */
@@ -42,7 +43,8 @@ interface PayService
                                    $successReturnUrl = '',
                                    $failReturnUrl = '',
                                    $description = '',
-                                   $extraParams = []);
+                                   $extraParams = [],
+                                   $receipt = null);
 
     /**
      * Validate request
