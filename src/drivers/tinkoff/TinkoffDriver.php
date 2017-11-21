@@ -76,7 +76,7 @@ class TinkoffDriver implements PayService
             'Currency' => (new ISO4217())->getByAlpha3($currency)['numeric'],
             'Description' => $description,
             'DATA' => $DATA,
-            'Receipt' => $receipt->toArray(),
+            'Receipt' => json_encode($receipt->toArray()),
         ];
 
         $paymentUrl = $this->getTransport()->getPaymentUrl($data);
