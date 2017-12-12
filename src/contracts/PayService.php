@@ -1,6 +1,7 @@
 <?php namespace professionalweb\payment\contracts;
 
 use Illuminate\Http\Response;
+use Illuminate\Contracts\Support\Arrayable;
 
 /**
  * Interface payment service
@@ -24,14 +25,15 @@ interface PayService
     /**
      * Pay
      *
-     * @param int    $orderId
-     * @param int    $paymentId
-     * @param float  $amount
+     * @param int $orderId
+     * @param int $paymentId
+     * @param float $amount
      * @param string $currency
      * @param string $successReturnUrl
      * @param string $failReturnUrl
      * @param string $description
-     * @param array  $extraParams
+     * @param array $extraParams
+     * @param Arrayable $receipt
      *
      * @return string
      */
@@ -42,7 +44,8 @@ interface PayService
                                    $successReturnUrl = '',
                                    $failReturnUrl = '',
                                    $description = '',
-                                   $extraParams = []);
+                                   $extraParams = [],
+                                   $receipt = null);
 
     /**
      * Validate request

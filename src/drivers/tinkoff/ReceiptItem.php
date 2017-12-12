@@ -1,40 +1,40 @@
-<?php namespace professionalweb\payment\drivers\yandex;
+<?php namespace professionalweb\payment\drivers\tinkoff;
 
 /**
  * Receipt item
- * @package professionalweb\payment\drivers\yandex
+ * @package professionalweb\payment\drivers\tinkoff
  */
 class ReceiptItem extends \professionalweb\payment\drivers\receipt\ReceiptItem
 {
     /**
      * без НДС
      */
-    const TAX_NO_VAT = 1;
+    const TAX_NO_VAT = 'none';
 
     /**
      * НДС по ставке 0%
      */
-    const TAX_VAT_0 = 2;
+    const TAX_VAT_0 = 'vat0';
 
     /**
      * НДС чека по ставке 10%
      */
-    const TAX_VAT_10 = 3;
+    const TAX_VAT_10 = 'vat10';
 
     /**
      * НДС чека по ставке 18%
      */
-    const TAX_VAT_18 = 4;
+    const TAX_VAT_18 = 'vat18';
 
     /**
      * НДС чека по расчетной ставке 10/110
      */
-    const TAX_VAT_110 = 5;
+    const TAX_VAT_110 = 'vat110';
 
     /**
      * НДС чека по расчетной ставке 18/118
      */
-    const TAX_VAT_118 = 6;
+    const TAX_VAT_118 = 'vat118';
 
     /**
      * Get the instance as an array.
@@ -44,13 +44,11 @@ class ReceiptItem extends \professionalweb\payment\drivers\receipt\ReceiptItem
     public function toArray()
     {
         return [
-            'quantity' => (int)$this->getQty(),
-            'price' => [
-                'amount' => (float)$this->getPrice(),
-            ],
-            'currency' => $this->getCurrency(),
-            'tax' => $this->getTax(),
-            'text' => mb_substr($this->getName(), 0, 128),
+            'Name' => mb_substr($this->getName(), 0, 128),
+            'Price' => (float)$this->getPrice(),
+            'Quantity' => (int)$this->getQty(),
+            'Amount' => (float)($this->getPrice() * $this->getQty()),
+            'Tax' => $this->getTax(),
         ];
     }
 }
