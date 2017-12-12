@@ -1,6 +1,6 @@
 {
   "name": "professionalweb/payment-laravel",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "description": "Payment drivers for laravel",
   "homepage": "http://web-development.pw/",
   "keywords": [
@@ -30,7 +30,7 @@
     "source": "https://github.com/SergioMadness/payonline/releases"
   },
   "require": {
-    "illuminate/support": ">=5.2",
+    "illuminate/support": "5.2.* || 5.3.* || 5.4.* || 5.5.*",
     "alcohol/iso4217": "*"
   },
   "require-dev": {
