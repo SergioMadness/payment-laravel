@@ -46,6 +46,7 @@ class PayOnlineDriver implements PayService
      * @param string $failReturnUrl
      * @param string $description
      * @param array  $extraParams
+     * @param object $receipt
      *
      * @return string
      */
@@ -56,7 +57,8 @@ class PayOnlineDriver implements PayService
                                    $successReturnUrl = '',
                                    $failReturnUrl = '',
                                    $description = '',
-                                   $extraParams = [])
+                                   $extraParams = [],
+                                   $receipt = null)
     {
         if (empty($successReturnUrl)) {
             $successReturnUrl = $this->getConfig()['successURL'];
