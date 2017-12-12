@@ -1,5 +1,6 @@
 <?php namespace professionalweb\payment;
 
+use Illuminate\Contracts\Support\Arrayable;
 use professionalweb\payment\contracts\PayService;
 use professionalweb\payment\contracts\PayProtocol;
 use professionalweb\payment\contracts\PaymentFacade;
@@ -34,14 +35,15 @@ class Payment implements PaymentFacade
     /**
      * Pay
      *
-     * @param int    $orderId
-     * @param int    $paymentId
-     * @param float  $amount
-     * @param string $currency
-     * @param string $successReturnUrl
-     * @param string $failReturnUrl
-     * @param string $description
-     * @param array  $extraParams
+     * @param int       $orderId
+     * @param int       $paymentId
+     * @param float     $amount
+     * @param string    $currency
+     * @param string    $successReturnUrl
+     * @param string    $failReturnUrl
+     * @param string    $description
+     * @param array     $extraParams
+     * @param Arrayable $receipt
      *
      * @return string
      */
@@ -52,7 +54,8 @@ class Payment implements PaymentFacade
                                    $successReturnUrl = '',
                                    $failReturnUrl = '',
                                    $description = '',
-                                   $extraParams = [])
+                                   $extraParams = [],
+                                   $receipt = null)
     {
         return $this->getCurrentDriver()->getPaymentLink($orderId,
             $paymentId,
@@ -61,7 +64,8 @@ class Payment implements PaymentFacade
             $successReturnUrl,
             $failReturnUrl,
             $description,
-            $extraParams);
+            $extraParams,
+            $receipt);
     }
 
     /**

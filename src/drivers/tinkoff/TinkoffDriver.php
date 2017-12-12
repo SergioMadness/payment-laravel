@@ -1,6 +1,7 @@
 <?php namespace professionalweb\payment\drivers\tinkoff;
 
 use Alcohol\ISO4217;
+use Illuminate\Contracts\Support\Arrayable;
 use professionalweb\payment\contracts\PayService;
 use professionalweb\payment\contracts\PayProtocol;
 
@@ -39,15 +40,15 @@ class TinkoffDriver implements PayService
     /**
      * Pay
      *
-     * @param int $orderId
-     * @param int $paymentId
-     * @param float $amount
+     * @param int        $orderId
+     * @param int        $paymentId
+     * @param float      $amount
      * @param int|string $currency
-     * @param string $successReturnUrl
-     * @param string $failReturnUrl
-     * @param string $description
-     * @param array $extraParams
-     * @param Receipt $receipt
+     * @param string     $successReturnUrl
+     * @param string     $failReturnUrl
+     * @param string     $description
+     * @param array      $extraParams
+     * @param Arrayable  $receipt
      *
      * @return string
      * @throws \Exception
@@ -71,13 +72,15 @@ class TinkoffDriver implements PayService
             $DATA .= $key . '=' . $val;
         });
         $data = [
-            'OrderId' => $orderId,
-            'Amount' => round($amount * 100),
-            'Currency' => (new ISO4217())->getByAlpha3($currency)['numeric'],
+            'OrderId'     => $orderId,
+            'Amount'      => round($amount * 100),
+            'Currency'    => (new ISO4217())->getByAlpha3($currency)['numeric'],
             'Description' => $description,
-            'DATA' => $DATA,
-            'Receipt' => json_encode($receipt->toArray()),
+            'DATA'        => $DATA,
         ];
+        if ($receipt instanceof Arrayable) {
+            $data['Receipt'] = (string)$receipt;
+        }
 
         $paymentUrl = $this->getTransport()->getPaymentUrl($data);
 
@@ -302,6 +305,7 @@ class TinkoffDriver implements PayService
      * Get param by name
      *
      * @param string $name
+     *
      * @return mixed
      */
     public function getParam($name)

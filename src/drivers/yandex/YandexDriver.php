@@ -1,5 +1,6 @@
 <?php namespace professionalweb\payment\drivers\yandex;
 
+use Illuminate\Contracts\Support\Arrayable;
 use professionalweb\payment\contracts\PayService;
 use professionalweb\payment\contracts\PayProtocol;
 
@@ -71,7 +72,7 @@ class YandexDriver implements PayService
      * @param string     $failReturnUrl
      * @param string     $description
      * @param array      $extraParams
-     * @param object      $receipt
+     * @param Arrayable  $receipt
      *
      * @return string
      * @throws \Exception
@@ -86,6 +87,10 @@ class YandexDriver implements PayService
                                    $extraParams = [],
                                    $receipt = null)
     {
+        if ($receipt instanceof Arrayable) {
+            $extraParams['ym_merchant_receipt'] = (string)$receipt;
+        }
+
         return $this->getTransport()->getPaymentUrl(array_merge([
             'orderNumber'    => $orderId,
             'customerNumber' => $orderId,

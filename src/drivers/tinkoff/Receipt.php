@@ -1,12 +1,10 @@
 <?php namespace professionalweb\payment\drivers\tinkoff;
 
-use Illuminate\Contracts\Support\Arrayable;
-
 /**
  * Receipt
  * @package professionalweb\payment\drivers\tinkoff
  */
-class Receipt implements Arrayable
+class Receipt extends \professionalweb\payment\drivers\receipt\Receipt
 {
     /**
      * общая СН
@@ -43,60 +41,20 @@ class Receipt implements Arrayable
      *
      * @var string
      */
-    private $phone;
-
-    /**
-     * Phone number
-     *
-     * @var string
-     */
     private $email;
-
-    /**
-     * Tax system
-     * Система налогообложения магазина (СНО). Параметр необходим, только если у вас несколько систем налогообложения. В остальных случаях не передается.
-     *
-     * @var int
-     */
-    private $taxSystem;
-
-    /**
-     * Items
-     *
-     * @var ReceiptItem[]
-     */
-    private $items = [];
 
     /**
      * Receipt constructor.
      *
-     * @param string     $phone
-     * @param string     $email
+     * @param string $phone
+     * @param string $email
      * @param array|null $items
-     * @param int        $taxSystem
+     * @param int $taxSystem
      */
     public function __construct($phone = null, $email = null, array $items = [], $taxSystem = null)
     {
-        $this->setPhone($phone)->setEmail($email)->setItems($items)->setTaxSystem($taxSystem);
-    }
-
-    /**
-     * @return string
-     */
-    public function getPhone()
-    {
-        return $this->phone;
-    }
-
-    /**
-     * @param $phone
-     * @return $this
-     */
-    public function setPhone($phone)
-    {
-        $this->phone = $phone;
-
-        return $this;
+        parent::__construct($phone, $items, $taxSystem);
+        $this->setEmail($email);
     }
 
     /**
@@ -118,69 +76,6 @@ class Receipt implements Arrayable
         return $this;
     }
 
-
-    /**
-     * Get tax system
-     *
-     * @return int
-     */
-    public function getTaxSystem()
-    {
-        return $this->taxSystem;
-    }
-
-    /**
-     * Set tax system
-     *
-     * @param int $taxSystem
-     *
-     * @return $this
-     */
-    public function setTaxSystem($taxSystem)
-    {
-        $this->taxSystem = $taxSystem;
-
-        return $this;
-    }
-
-    /**
-     * Get all items in receipt
-     *
-     * @return ReceiptItem[]
-     */
-    public function getItems()
-    {
-        return $this->items;
-    }
-
-    /**
-     * Set items in receipt
-     *
-     * @param ReceiptItem[] $items
-     *
-     * @return $this
-     */
-    public function setItems(array $items)
-    {
-        $this->items = $items;
-
-        return $this;
-    }
-
-    /**
-     * Add item
-     *
-     * @param ReceiptItem $item
-     *
-     * @return $this
-     */
-    public function addItem(ReceiptItem $item)
-    {
-        $this->items[] = $item;
-
-        return $this;
-    }
-
     /**
      * Receipt to array
      *
@@ -196,7 +91,7 @@ class Receipt implements Arrayable
         $result = [
             'Phone' => $this->getPhone(),
             'Email' => $this->getEmail(),
-            'Items'           => $items,
+            'Items' => $items,
         ];
         if (($taxSystem = $this->getTaxSystem()) !== null) {
             $result['Taxation'] = $taxSystem;
