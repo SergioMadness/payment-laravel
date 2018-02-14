@@ -16,6 +16,8 @@ drivers/            Payment drivers
     tinkoff/        Tinkoff driver - https://oplata.tinkoff.ru/documentation/
     yandex/         Yandex.Kassa driver - https://tech.yandex.ru/money/doc/payment-solution/payment-notifications/payment-notifications-about-docpage/
 facades/            Payment facade
+services/           Different payment services
+    payonline/      Payonline services
 ```
 
 
@@ -38,7 +40,7 @@ composer require professionalweb/payment-laravel "dev-master"
 Alternatively you can add the following to the `require` section in your `composer.json` manually:
 
 ```json
-"professionalweb/payment-laravel": "^2.1"
+"professionalweb/payment-laravel": "^2.2"
 ```
 Run `composer update` afterwards.
 
@@ -90,27 +92,6 @@ return [
         ...
     ],
 ];
-```
-
-To send receipt to IRS
-```php
-/**
- * Prepare Receipt
- *
- * @param Order $order
- *
- * @return Receipt
- */
-public function prepareReceipt(Order $order)
-{
-    $receipt = new Receipt($order->user->email);
-    /** @var Item $item */
-    foreach ($order->items as $item) {
-        $receipt->addItem(new ReceiptItem($item->name, $item->qty, $item->price, config('payment.tax')));
-    }
-
-    return $receipt;
-}
 ```
 
 ##config/payment.php
@@ -184,6 +165,44 @@ public function responseHandler(PayService $paymentService) {
 }
 ```
 
+Receipts
+--------
+To send receipt to IRS
+```php
+/**
+ * Prepare Receipt
+ *
+ * @param Order $order
+ *
+ * @return Receipt
+ */
+public function prepareReceipt(Order $order)
+{
+    $receipt = new Receipt($order->user->email);
+    /** @var Item $item */
+    foreach ($order->items as $item) {
+        $receipt->addItem(new ReceiptItem($item->name, $item->qty, $item->price, config('payment.tax')));
+    }
+
+    return $receipt;
+}
+```
+
+PayOnline has separate service to send register receipts and send to users.
+```php
+use professionalweb\payment\contracts\ReceiptService;
+
+$receipt = new Receipt($order->user->email);
+$receipt->setTransactionId($transactionIdFromPayOnlineResponse);
+/** @var Item $item */
+foreach ($order->items as $item) {
+    $receipt->addItem(new ReceiptItem($item->name, $item->qty, $item->price, config('payment.tax')));
+}
+
+app(ReceiptService::class)->sendReceipt(
+    $this->prepareReceipt()
+);
+``` 
 
 
 The MIT License (MIT)

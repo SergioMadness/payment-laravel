@@ -17,6 +17,31 @@ class Receipt extends \professionalweb\payment\drivers\receipt\Receipt
     const OPERATION_TYPE_CHARGE = 'Charge';
 
     /**
+     * Payment by card
+     */
+    const PAYMENT_TYPE_CARD = 'card';
+
+    /**
+     * Payment through WebMoney
+     */
+    const PAYMENT_TYPE_WEBMONEY = 'wm';
+
+    /**
+     * Payment through Yandex.Money
+     */
+    const PAYMENT_TYPE_YANDEX_MONEY = 'yd';
+
+    /**
+     * Payment through Qiwi
+     */
+    const PAYMENT_TYPE_QIWI = 'qiwi';
+
+    /**
+     * Payment through custom payment system
+     */
+    const PAYMENT_TYPE_CUSTOM = 'custom';
+
+    /**
      * No taxes
      */
     const TAX_NONE = 'none';
@@ -47,43 +72,114 @@ class Receipt extends \professionalweb\payment\drivers\receipt\Receipt
     const TAX_VAT118 = 'vat118';
 
     /**
-     * Phone number
+     * Operation type
      *
      * @var string
      */
-    private $email;
+    private $operation;
+
+    /**
+     * Transaction id
+     *
+     * @var string
+     */
+    private $transactionId;
+
+    /**
+     * Payment type
+     *
+     * @var string
+     */
+    private $paymentType;
 
     /**
      * Receipt constructor.
      *
-     * @param string $phone
-     * @param string $email
+     * @param string     $email
      * @param array|null $items
-     * @param int $taxSystem
+     * @param string     $paymentType
+     * @param string     $transactionId
+     * @param string     $taxSystem
+     * @param string     $operation
      */
-    public function __construct($phone = null, $email = null, array $items = [], $taxSystem = null)
+    public function __construct($email = null, array $items = [], $paymentType = self::PAYMENT_TYPE_CARD, $transactionId = null,
+                                $taxSystem = self::TAX_VAT18, $operation = self::OPERATION_TYPE_BENEFIT)
     {
-        parent::__construct($phone, $items, $taxSystem);
-        $this->setEmail($email);
+        parent::__construct($email, $items, $taxSystem);
+
+        $this->setOperation($operation)->setPaymentType($paymentType)->setTransactionId($transactionId);
     }
 
     /**
+     * Get payment type
+     *
      * @return string
      */
-    public function getEmail()
+    public function getPaymentType()
     {
-        return $this->email;
+        return $this->paymentType;
     }
 
     /**
-     * @param $email
-     * @return $this
+     * Set payment type
+     *
+     * @param string $paymentType
+     *
+     * @return Receipt
      */
-    public function setEmail($email)
+    public function setPaymentType($paymentType)
     {
-        $this->email = $email;
+        $this->paymentType = $paymentType;
 
         return $this;
+    }
+
+    /**
+     * Get transaction id
+     *
+     * @return string
+     */
+    public function getTransactionId()
+    {
+        return $this->transactionId;
+    }
+
+    /**
+     * Set transaction id
+     *
+     * @param string $transactionId
+     *
+     * @return Receipt
+     */
+    public function setTransactionId($transactionId)
+    {
+        $this->transactionId = $transactionId;
+
+        return $this;
+    }
+
+    /**
+     * Set operation type
+     *
+     * @param string $operation
+     *
+     * @return $this
+     */
+    public function setOperation($operation)
+    {
+        $this->operation = $operation;
+
+        return $this;
+    }
+
+    /**
+     * Get operation type
+     *
+     * @return string
+     */
+    public function getOperation()
+    {
+        return $this->operation;
     }
 
     /**
@@ -93,19 +189,22 @@ class Receipt extends \professionalweb\payment\drivers\receipt\Receipt
      */
     public function toArray()
     {
-        $items = array_map(function ($item) {
+        $totalAmount = 0;
+        $items = array_map(function ($item) use (&$totalAmount) {
             /** @var ReceiptItem $item */
+            $totalAmount += $item->getPrice() * $item->getPrice();
+
             return $item->toArray();
         }, $this->getItems());
 
         $result = [
-            'Phone' => $this->getPhone(),
-            'Email' => $this->getEmail(),
-            'Items' => $items,
+            'operation'         => $this->getOperation(),
+            'email'             => $this->getContact(),
+            'transactionId'     => $this->getTransactionId(),
+            'paymentSystemType' => $this->getPaymentType(),
+            'totalAmount'       => $totalAmount,
+            'goods'             => $items,
         ];
-        if (($taxSystem = $this->getTaxSystem()) !== null) {
-            $result['Taxation'] = $taxSystem;
-        }
 
         return $result;
     }
