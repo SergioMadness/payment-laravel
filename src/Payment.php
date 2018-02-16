@@ -340,7 +340,7 @@ class Payment implements PaymentFacade
      */
     public function getLastError()
     {
-        $this->getCurrentDriver()->getLastError();
+        return $this->getCurrentDriver()->getLastError();
     }
 
     /**
@@ -352,7 +352,7 @@ class Payment implements PaymentFacade
      */
     public function getParam($name)
     {
-        return $this->getParam($name);
+        return $this->getCurrentDriver()->getParam($name);
     }
 
     /**

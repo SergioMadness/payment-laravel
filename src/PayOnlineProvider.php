@@ -27,22 +27,22 @@ class PayOnlineProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(PayService::class, function ($app) {
+        $this->app->bind(PayService::class, function ($app) {
             return (new PayOnlineDriver(config('payment.payonline')))->setTransport(
                 new PayOnlineProtocol(config('payment.payonline.merchantId'), config('payment.payonline.secretKey'))
             );
         });
-        $this->app->singleton(PayOnlineDriver::class, function ($app) {
+        $this->app->bind(PayOnlineDriver::class, function ($app) {
             return (new PayOnlineDriver(config('payment.payonline')))->setTransport(
                 new PayOnlineProtocol(config('payment.payonline.merchantId'), config('payment.payonline.secretKey'))
             );
         });
-        $this->app->singleton('\professionalweb\payment\PayOnline', function ($app) {
+        $this->app->bind('\professionalweb\payment\PayOnline', function ($app) {
             return (new PayOnlineDriver(config('payment.payonline')))->setTransport(
                 new PayOnlineProtocol(config('payment.payonline.merchantId'), config('payment.payonline.secretKey'))
             );
         });
-        $this->app->singleton(IReceiptService::class, function () {
+        $this->app->bind(IReceiptService::class, function () {
             return new ReceiptService(config('payment.payonline.merchantId'), config('payment.payonline.secretKey'));
         });
         $this->app->bind('\Payment', Payment::class);
