@@ -1,8 +1,8 @@
 <?php namespace professionalweb\payment;
 
 use Illuminate\Support\ServiceProvider;
-use professionalweb\payment\contracts\PaymentFacade;
 use professionalweb\payment\contracts\PayService;
+use professionalweb\payment\contracts\PaymentFacade;
 use professionalweb\payment\drivers\yandex\YandexDriver;
 use professionalweb\payment\drivers\tinkoff\TinkoffDriver;
 use professionalweb\payment\drivers\payonline\PayOnlineDriver;
@@ -35,15 +35,10 @@ class PaymentProvider extends ServiceProvider
         (new TinkoffProvider($this->app))->register();
         (new YandexProvider($this->app))->register();
 
-        $this->app->singleton(PayService::class, function ($app) {
-            return $this->getFacade();
-        });
-        $this->app->singleton('\Payment', function ($app) {
-            return $this->getFacade();
-        });
-        $this->app->singleton(PaymentFacade::class, function ($app) {
-            return $this->getFacade();
-        });
+        $facade = $this->getFacade();
+        $this->app->instance(PayService::class, $facade);
+        $this->app->instance('\Payment', $facade);
+        $this->app->instance(PaymentFacade::class, $facade);
     }
 
     protected function getFacade()
