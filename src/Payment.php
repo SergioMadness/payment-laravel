@@ -328,7 +328,7 @@ class Payment implements PaymentFacade
      *
      * @return string
      */
-    public function getCheckResponse($errorCode = 0)
+    public function getCheckResponse($errorCode = null)
     {
         return $this->getCurrentDriver()->getNotificationResponse($errorCode);
     }
