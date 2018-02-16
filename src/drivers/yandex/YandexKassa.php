@@ -219,6 +219,9 @@ class YandexKassa implements PayProtocol
      */
     private function checkSign($request)
     {
+        if (count(array_diff(['action', 'orderSumAmount', 'orderSumCurrencyPaycash', 'orderSumBankPaycash', 'shopId', 'invoiceId', 'customerNumber'], array_keys($request))) > 0) {
+            return 1;
+        }
         $str = $request['action'] . ";" .
             $request['orderSumAmount'] . ";" . $request['orderSumCurrencyPaycash'] . ";" .
             $request['orderSumBankPaycash'] . ";" . $request['shopId'] . ";" .
@@ -276,7 +279,7 @@ class YandexKassa implements PayProtocol
      */
     public function getNotificationResponse($requestData, $errorCode)
     {
-        return response($this->prepareXML(self::RESPONSE_ROOT_AVISO, $errorCode, $requestData['invoiceId']), 200, ['Content-Type' => 'text/xml']);
+        return response($this->prepareXML(self::RESPONSE_ROOT_AVISO, $errorCode, isset($requestData['invoiceId']) ? $requestData['invoiceId'] : ''), 200, ['Content-Type' => 'text/xml']);
     }
 
     /**
@@ -289,7 +292,7 @@ class YandexKassa implements PayProtocol
      */
     public function getCheckResponse($requestData, $errorCode)
     {
-        return response($this->prepareXML(self::RESPONSE_ROOT_CHECK, $errorCode, $requestData['invoiceId']), 200, ['Content-Type' => 'text/xml']);
+        return response($this->prepareXML(self::RESPONSE_ROOT_CHECK, $errorCode, isset($requestData['invoiceId']) ? $requestData['invoiceId'] : ''), 200, ['Content-Type' => 'text/xml']);
     }
 
     /**
@@ -304,6 +307,6 @@ class YandexKassa implements PayProtocol
     protected function prepareXML($rootName, $errorCode, $invoiceId)
     {
         return '<?xml version="1.0" encoding="UTF-8"?><' . $rootName . ' performedDatetime="' . date('Y-m-d\TH:i:s.000P') .
-        '" code="' . $errorCode . '"  invoiceId="' . $invoiceId . '" shopId="' . $this->getShopId() . '"/>';
+            '" code="' . $errorCode . '"  invoiceId="' . $invoiceId . '" shopId="' . $this->getShopId() . '"/>';
     }
 }

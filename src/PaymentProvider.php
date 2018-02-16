@@ -38,10 +38,10 @@ class PaymentProvider extends ServiceProvider
         $this->app->singleton(PayService::class, function ($app) {
             return $this->getFacade();
         });
-        $this->app->bind('\Payment', function ($app) {
+        $this->app->singleton('\Payment', function ($app) {
             return $this->getFacade();
         });
-        $this->app->bind(PaymentFacade::class, function ($app) {
+        $this->app->singleton(PaymentFacade::class, function ($app) {
             return $this->getFacade();
         });
     }

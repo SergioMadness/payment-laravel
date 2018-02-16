@@ -26,17 +26,17 @@ class YandexProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(PayService::class, function ($app) {
+        $this->app->bind(PayService::class, function ($app) {
             return (new YandexDriver(config('payment.yandex')))->setTransport(
                 new YandexKassa(config('payment.yandex.merchantId'), config('payment.yandex.scid'), config('payment.yandex.secretKey'), config('payment.yandex.isTest') ? YandexKassa::ESHOP_URL_DEMO : YandexKassa::ESHOP_URL_PROD)
             );
         });
-        $this->app->singleton(YandexDriver::class, function ($app) {
+        $this->app->bind(YandexDriver::class, function ($app) {
             return (new YandexDriver(config('payment.yandex')))->setTransport(
                 new YandexKassa(config('payment.yandex.merchantId'), config('payment.yandex.scid'), config('payment.yandex.secretKey'), config('payment.yandex.isTest') ? YandexKassa::ESHOP_URL_DEMO : YandexKassa::ESHOP_URL_PROD)
             );
         });
-        $this->app->singleton('\professionalweb\payment\Yandex', function ($app) {
+        $this->app->bind('\professionalweb\payment\Yandex', function ($app) {
             return (new YandexDriver(config('payment.yandex')))->setTransport(
                 new YandexKassa(config('payment.yandex.merchantId'), config('payment.yandex.scid'), config('payment.yandex.secretKey'), config('payment.yandex.isTest') ? YandexKassa::ESHOP_URL_DEMO : YandexKassa::ESHOP_URL_PROD)
             );
