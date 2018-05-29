@@ -330,7 +330,7 @@ class Payment implements PaymentFacade
      */
     public function getCheckResponse($errorCode = null)
     {
-        return $this->getCurrentDriver()->getNotificationResponse($errorCode);
+        return $this->getCurrentDriver()->getCheckResponse($errorCode);
     }
 
     /**
