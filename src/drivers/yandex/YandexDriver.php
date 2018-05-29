@@ -96,6 +96,9 @@ class YandexDriver implements PayService
             'customerNumber' => $orderId,
             'sum'            => $amount,
             'PaymentId'      => $paymentId,
+            'shopSuccessURL' => $successReturnUrl,
+            'shopDefaultUrl' => $successReturnUrl,
+            'shopFailURL'    => $failReturnUrl,
         ], $extraParams));
     }
 
