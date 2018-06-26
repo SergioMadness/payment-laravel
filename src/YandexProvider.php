@@ -5,7 +5,6 @@ use professionalweb\payment\contracts\PayService;
 use professionalweb\payment\drivers\yandex\YandexKassa;
 use professionalweb\payment\drivers\yandex\YandexDriver;
 
-
 /**
  * Yandex payment provider
  * @package professionalweb\payment
@@ -28,17 +27,26 @@ class YandexProvider extends ServiceProvider
     {
         $this->app->bind(PayService::class, function ($app) {
             return (new YandexDriver(config('payment.yandex')))->setTransport(
-                new YandexKassa(config('payment.yandex.merchantId'), config('payment.yandex.scid'), config('payment.yandex.secretKey'), config('payment.yandex.isTest') ? YandexKassa::ESHOP_URL_DEMO : YandexKassa::ESHOP_URL_PROD)
+                new YandexKassa(
+                    config('payment.yandex.merchantId'),
+                    config('payment.yandex.secretKey')
+                )
             );
         });
         $this->app->bind(YandexDriver::class, function ($app) {
             return (new YandexDriver(config('payment.yandex')))->setTransport(
-                new YandexKassa(config('payment.yandex.merchantId'), config('payment.yandex.scid'), config('payment.yandex.secretKey'), config('payment.yandex.isTest') ? YandexKassa::ESHOP_URL_DEMO : YandexKassa::ESHOP_URL_PROD)
+                new YandexKassa(
+                    config('payment.yandex.merchantId'),
+                    config('payment.yandex.secretKey')
+                )
             );
         });
         $this->app->bind('\professionalweb\payment\Yandex', function ($app) {
             return (new YandexDriver(config('payment.yandex')))->setTransport(
-                new YandexKassa(config('payment.yandex.merchantId'), config('payment.yandex.scid'), config('payment.yandex.secretKey'), config('payment.yandex.isTest') ? YandexKassa::ESHOP_URL_DEMO : YandexKassa::ESHOP_URL_PROD)
+                new YandexKassa(
+                    config('payment.yandex.merchantId'),
+                    config('payment.yandex.secretKey')
+                )
             );
         });
         $this->app->bind('\Payment', Payment::class);

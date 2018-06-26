@@ -1,6 +1,6 @@
 {
   "name": "professionalweb/payment-laravel",
-  "version": "2.2.4",
+  "version": "3.0.0",
   "description": "Payment drivers for laravel",
   "homepage": "http://web-development.pw/",
   "keywords": [
@@ -31,7 +31,8 @@
   },
   "require": {
     "illuminate/support": "5.2.* || 5.3.* || 5.4.* || 5.5.*",
-    "alcohol/iso4217": "*"
+    "alcohol/iso4217": "*",
+    "yandex-money/yandex-checkout-sdk-php": "1.0.*"
   },
   "require-dev": {
     "codeception/codeception": "*",

@@ -87,19 +87,28 @@ class YandexDriver implements PayService
                                    $extraParams = [],
                                    $receipt = null)
     {
+        $params = [
+            'amount'       => [
+                'value'    => $amount,
+                'currency' => $currency,
+            ],
+            'metadata'     => [
+                'orderId'   => $orderId,
+                'paymentId' => $paymentId,
+            ],
+            'confirmation' => [
+                'type'       => 'redirect',
+                'return_url' => $successReturnUrl,
+            ],
+            'description'  => $description,
+            'capture'      => true,
+        ];
         if ($receipt instanceof Arrayable) {
-            $extraParams['ym_merchant_receipt'] = (string)$receipt;
+            $params['receipt'] = (string)$receipt;
         }
+        $params = array_merge($params, $extraParams);
 
-        return $this->getTransport()->getPaymentUrl(array_merge([
-            'orderNumber'    => $orderId,
-            'customerNumber' => $orderId,
-            'sum'            => $amount,
-            'PaymentId'      => $paymentId,
-            'shopSuccessURL' => $successReturnUrl,
-            'shopDefaultUrl' => $successReturnUrl,
-            'shopFailURL'    => $failReturnUrl,
-        ], $extraParams));
+        return $this->getTransport()->getPaymentUrl($params);
     }
 
     /**

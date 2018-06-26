@@ -1,5 +1,6 @@
 <?php namespace professionalweb\payment\drivers\yandex;
 
+use YandexCheckout\Client;
 use Illuminate\Http\Response;
 use professionalweb\payment\contracts\PayProtocol;
 
@@ -10,18 +11,10 @@ use professionalweb\payment\contracts\PayProtocol;
  */
 class YandexKassa implements PayProtocol
 {
-    const ESHOP_URL_DEMO = 'https://demomoney.yandex.ru/eshop.xml';
-    const ESHOP_URL_PROD = 'https://money.yandex.ru/eshop.xml';
-
-    const RESPONSE_ROOT_CHECK = 'checkOrderResponse';
-    const RESPONSE_ROOT_AVISO = 'paymentAvisoResponse';
-
     /**
-     * Ya URL
-     *
-     * @var string
+     * @var Client
      */
-    private $eshopUrl;
+    private $client;
 
     /**
      * Shop ID
@@ -31,105 +24,21 @@ class YandexKassa implements PayProtocol
     private $shopId;
 
     /**
-     * Shop window ID
-     *
-     * @var int
-     */
-    private $scid;
-
-    /**
-     * Shop password
+     * Shop secret key
      *
      * @var string
      */
-    private $shopPassword;
+    private $shopSecret;
 
     /**
      * Yandex.Kassa constructor.
      *
-     * @param int    $shopId
-     * @param int    $scid
-     * @param null   $password
-     * @param string $url
+     * @param int $shopId
+     * @param int $shopSecret
      */
-    public function __construct($shopId = null, $scid = null, $password = null, $url = self::ESHOP_URL_PROD)
+    public function __construct($shopId = null, $shopSecret = null)
     {
-        $this->setEshopUrl($url)->setShopId($shopId)->setScid($scid)->setShopPassword($password);
-    }
-
-    /**
-     * Send POST request to Yandex.Kassa
-     *
-     * @param string $url
-     * @param array  $params
-     *
-     * @return string
-     */
-    protected function sendPostRequest($url, array $params)
-    {
-        $curl = curl_init($url);
-        curl_setopt($curl, CURLOPT_USERAGENT, 'Yandex.Money.SDK/PHP');
-        curl_setopt($curl, CURLOPT_POST, 1);
-        $query = http_build_query($params);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $query);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_HEADER, 1);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, ['Expect:']);
-        $body = curl_exec($curl);
-
-        return $body;
-    }
-
-    /**
-     * Parse string with headers
-     *
-     * @param string $headersStr
-     *
-     * @return array
-     */
-    protected function parseHeaders($headersStr)
-    {
-        $result = [];
-
-        $arrRequests = explode("\r\n\r\n", $headersStr);
-
-        for ($index = 0; $index < count($arrRequests) - 1; $index++) {
-
-            foreach (explode("\r\n", $arrRequests[$index]) as $i => $line) {
-                if ($i === 0)
-                    $result[$index]['http_code'] = $line;
-                else {
-                    list ($key, $value) = explode(': ', $line);
-                    $result[$index][mb_strtolower($key)] = $value;
-                }
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Get URL
-     *
-     * @return string
-     */
-    public function getEshopUrl()
-    {
-        return $this->eshopUrl;
-    }
-
-    /**
-     * Set URL
-     *
-     * @param string $eshopUrl
-     *
-     * @return $this
-     */
-    public function setEshopUrl($eshopUrl)
-    {
-        $this->eshopUrl = $eshopUrl;
-
-        return $this;
+        $this->setShopId($shopId)->setShopPassword($shopSecret);
     }
 
     /**
@@ -154,30 +63,6 @@ class YandexKassa implements PayProtocol
         return $this;
     }
 
-    /**
-     * Get SCID
-     *
-     * @return int
-     */
-    public function getScid()
-    {
-        return $this->scid;
-    }
-
-    /**
-     * Set SCID
-     *
-     * @param int $scid
-     *
-     * @return $this
-     */
-    public function setScid($scid)
-    {
-        $this->scid = $scid;
-
-        return $this;
-    }
-
 
     /**
      * Get payment URL
@@ -185,17 +70,22 @@ class YandexKassa implements PayProtocol
      * @param mixed $params
      *
      * @return string
+     * @throws \Exception
+     * @throws \YandexCheckout\Common\Exceptions\ApiException
+     * @throws \YandexCheckout\Common\Exceptions\BadApiRequestException
+     * @throws \YandexCheckout\Common\Exceptions\ForbiddenException
+     * @throws \YandexCheckout\Common\Exceptions\InternalServerError
+     * @throws \YandexCheckout\Common\Exceptions\NotFoundException
+     * @throws \YandexCheckout\Common\Exceptions\ResponseProcessingException
+     * @throws \YandexCheckout\Common\Exceptions\TooManyRequestsException
+     * @throws \YandexCheckout\Common\Exceptions\UnauthorizedException
      */
     public function getPaymentUrl($params)
     {
-        $response = $this->sendPostRequest($this->getEshopUrl(), array_merge([
-            'shopId' => $this->getShopId(),
-            'scid'   => $this->getScid(),
-        ], $params));
+        $response = $this->getClient()->createPayment($params);
 
-        $headers = $this->parseHeaders($response);
-
-        return isset($headers[0]) && isset($headers[0]['location']) ? $headers[0]['location'] : null;
+        return isset($response['confirmation']) && isset($response['confirmation']['confirmation_url']) ?
+            $response['confirmation']['confirmation_url'] : '';
     }
 
     /**
@@ -207,32 +97,9 @@ class YandexKassa implements PayProtocol
      */
     public function validate($params)
     {
-        return $this->checkSign($params);
+        return true;
     }
 
-    /**
-     * Checking the MD5 sign.
-     *
-     * @param  array $request payment parameters
-     *
-     * @return int true if MD5 hash is correct
-     */
-    private function checkSign($request)
-    {
-        if (count(array_diff(['action', 'orderSumAmount', 'orderSumCurrencyPaycash', 'orderSumBankPaycash', 'shopId', 'invoiceId', 'customerNumber'], array_keys($request))) > 0) {
-            return 1;
-        }
-        $str = $request['action'] . ";" .
-            $request['orderSumAmount'] . ";" . $request['orderSumCurrencyPaycash'] . ";" .
-            $request['orderSumBankPaycash'] . ";" . $request['shopId'] . ";" .
-            $request['invoiceId'] . ";" . trim($request['customerNumber']) . ";" . $this->getShopPassword();
-        $md5 = strtoupper(md5($str));
-        if ($md5 != strtoupper($request['md5'])) {
-            return 1;
-        }
-
-        return 0;
-    }
 
     /**
      * Get payment ID
@@ -245,26 +112,48 @@ class YandexKassa implements PayProtocol
     }
 
     /**
-     * Get shop password
+     * Get shop secret key
      *
      * @return string
      */
     public function getShopPassword()
     {
-        return $this->shopPassword;
+        return $this->shopSecret;
     }
 
     /**
-     * Set shop password
+     * Set shop secret key
      *
-     * @param string $shopPassword
+     * @param string $shopSecret
      *
      * @return $this;
      */
-    public function setShopPassword($shopPassword)
+    public function setShopPassword($shopSecret)
     {
-        $this->shopPassword = $shopPassword;
+        $this->shopSecret = $shopSecret;
 
+        return $this;
+    }
+
+    /**
+     * Get URL
+     *
+     * @return string
+     */
+    public function getEshopUrl()
+    {
+        return '';
+    }
+
+    /**
+     * Set URL
+     *
+     * @param string $eshopUrl
+     *
+     * @return $this
+     */
+    public function setEshopUrl($eshopUrl)
+    {
         return $this;
     }
 
@@ -275,11 +164,11 @@ class YandexKassa implements PayProtocol
      * @param mixed $requestData
      * @param int   $errorCode
      *
-     * @return Response
+     * @return string
      */
     public function getNotificationResponse($requestData, $errorCode)
     {
-        return response($this->prepareXML(self::RESPONSE_ROOT_AVISO, $errorCode, isset($requestData['invoiceId']) ? $requestData['invoiceId'] : ''), 200, ['Content-Type' => 'text/xml']);
+        // TODO: Implement getNotificationResponse() method.
     }
 
     /**
@@ -288,25 +177,25 @@ class YandexKassa implements PayProtocol
      * @param array $requestData
      * @param int   $errorCode
      *
-     * @return Response
+     * @return string
      */
     public function getCheckResponse($requestData, $errorCode)
     {
-        return response($this->prepareXML(self::RESPONSE_ROOT_CHECK, $errorCode, isset($requestData['invoiceId']) ? $requestData['invoiceId'] : ''), 200, ['Content-Type' => 'text/xml']);
+        // TODO: Implement getCheckResponse() method.
     }
 
     /**
-     * Prepare XML for response
+     * Create Kassa.Yandex client
      *
-     * @param string $rootName
-     * @param int    $errorCode
-     * @param int    $invoiceId
-     *
-     * @return string
+     * @return Client
      */
-    protected function prepareXML($rootName, $errorCode, $invoiceId)
+    protected function getClient()
     {
-        return '<?xml version="1.0" encoding="UTF-8"?><' . $rootName . ' performedDatetime="' . date('Y-m-d\TH:i:s.000P') .
-            '" code="' . $errorCode . '"  invoiceId="' . $invoiceId . '" shopId="' . $this->getShopId() . '"/>';
+        if ($this->client === null) {
+            $this->client = new Client();
+            $this->client->setAuth($this->getShopId(), $this->getShopPassword());
+        }
+
+        return $this->client;
     }
 }
