@@ -90,23 +90,23 @@ class YandexDriver implements PayService
                                    $receipt = null)
     {
         $params = [
-            'amount'         => [
+            'amount'              => [
                 'value'    => $amount,
                 'currency' => $currency,
             ],
-            'metadata'       => [
+            'metadata'            => [
                 'orderId'   => $orderId,
                 'paymentId' => $paymentId,
             ],
-            'confirmation'   => [
+            'confirmation'        => [
                 'type'       => 'redirect',
                 'return_url' => $successReturnUrl,
             ],
-            'payment_method' => [
-                'type' => $paymentType,
+            'payment_method_data' => [
+                'type' => $this->getPaymentMethod($paymentType),
             ],
-            'description'    => $description,
-            'capture'        => true,
+            'description'         => $description,
+            'capture'             => true,
         ];
         if ($receipt instanceof Arrayable) {
             $params['receipt'] = (string)$receipt;
@@ -177,7 +177,7 @@ class YandexDriver implements PayService
      */
     public function getResponseParam($name, $default = '')
     {
-        return Arr::get($name, $this->response['object'] ?? [], $default);
+        return Arr::get($this->response['object'] ?? [], $name, $default);
     }
 
     /**

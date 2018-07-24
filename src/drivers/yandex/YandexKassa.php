@@ -93,11 +93,11 @@ class YandexKassa implements PayProtocol
      *
      * @param mixed $params
      *
-     * @return bool
+     * @return int
      */
     public function validate($params)
     {
-        return true;
+        return 0;
     }
 
 
@@ -142,11 +142,11 @@ class YandexKassa implements PayProtocol
      * @param mixed $requestData
      * @param int   $errorCode
      *
-     * @return string
+     * @return Response
      */
     public function getNotificationResponse($requestData, $errorCode)
     {
-        // TODO: Implement getNotificationResponse() method.
+        return \response('ok');
     }
 
     /**
@@ -155,11 +155,11 @@ class YandexKassa implements PayProtocol
      * @param array $requestData
      * @param int   $errorCode
      *
-     * @return string
+     * @return Response
      */
     public function getCheckResponse($requestData, $errorCode)
     {
-        // TODO: Implement getCheckResponse() method.
+        return \response('ok');
     }
 
     /**
