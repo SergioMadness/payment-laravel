@@ -15,6 +15,13 @@ interface PayService
     const CURRENCY_RUR = 'RUB';
     const CURRENCY_RUR_ISO = 643;
 
+    const PAYMENT_TYPE_CARD = 'card';
+    const PAYMENT_TYPE_CASH = 'cash';
+    const PAYMENT_TYPE_MOBILE = 'mobile';
+    const PAYMENT_TYPE_QIWI = 'qiwi';
+    const PAYMENT_TYPE_SBERBANK = 'sberbank';
+    const PAYMENT_TYPE_YANDEX_MONEY = 'yandex.money';
+
     /**
      * Get name of payment service
      *
@@ -25,14 +32,14 @@ interface PayService
     /**
      * Pay
      *
-     * @param int $orderId
-     * @param int $paymentId
-     * @param float $amount
-     * @param string $currency
-     * @param string $successReturnUrl
-     * @param string $failReturnUrl
-     * @param string $description
-     * @param array $extraParams
+     * @param int       $orderId
+     * @param int       $paymentId
+     * @param float     $amount
+     * @param string    $currency
+     * @param string    $successReturnUrl
+     * @param string    $failReturnUrl
+     * @param string    $description
+     * @param array     $extraParams
      * @param Arrayable $receipt
      *
      * @return string
@@ -41,6 +48,7 @@ interface PayService
                                    $paymentId,
                                    $amount,
                                    $currency = self::CURRENCY_RUR,
+                                   $paymentType = self::PAYMENT_TYPE_CARD,
                                    $successReturnUrl = '',
                                    $failReturnUrl = '',
                                    $description = '',
@@ -71,6 +79,13 @@ interface PayService
      * @return string
      */
     public function getOrderId();
+
+    /**
+     * Get payment id
+     *
+     * @return string
+     */
+    public function getPaymentId();
 
     /**
      * Get operation status

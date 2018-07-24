@@ -135,28 +135,6 @@ class YandexKassa implements PayProtocol
         return $this;
     }
 
-    /**
-     * Get URL
-     *
-     * @return string
-     */
-    public function getEshopUrl()
-    {
-        return '';
-    }
-
-    /**
-     * Set URL
-     *
-     * @param string $eshopUrl
-     *
-     * @return $this
-     */
-    public function setEshopUrl($eshopUrl)
-    {
-        return $this;
-    }
-
 
     /**
      * Prepare response on notification request
