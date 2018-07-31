@@ -54,6 +54,7 @@ class PayOnlineDriver implements PayService
                                    $paymentId,
                                    $amount,
                                    $currency = self::CURRENCY_RUR,
+                                   $paymentType = self::PAYMENT_TYPE_CARD,
                                    $successReturnUrl = '',
                                    $failReturnUrl = '',
                                    $description = '',
@@ -310,5 +311,15 @@ class PayOnlineDriver implements PayService
     public function getName()
     {
         return 'payonline';
+    }
+
+    /**
+     * Get payment id
+     *
+     * @return string
+     */
+    public function getPaymentId()
+    {
+        return $this->getResponseParam('PaymentId');
     }
 }

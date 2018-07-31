@@ -57,6 +57,7 @@ class TinkoffDriver implements PayService
                                    $paymentId,
                                    $amount,
                                    $currency = self::CURRENCY_RUR_ISO,
+                                   $paymentType = self::PAYMENT_TYPE_CARD,
                                    $successReturnUrl = '',
                                    $failReturnUrl = '',
                                    $description = '',
@@ -321,5 +322,15 @@ class TinkoffDriver implements PayService
     public function getName()
     {
         return 'tinkoff';
+    }
+
+    /**
+     * Get payment id
+     *
+     * @return string
+     */
+    public function getPaymentId()
+    {
+        return $this->getResponseParam('PaymentId');
     }
 }

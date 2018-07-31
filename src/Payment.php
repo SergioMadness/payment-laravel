@@ -51,6 +51,7 @@ class Payment implements PaymentFacade
                                    $paymentId,
                                    $amount,
                                    $currency = self::CURRENCY_RUR,
+                                   $paymentType = self::PAYMENT_TYPE_CARD,
                                    $successReturnUrl = '',
                                    $failReturnUrl = '',
                                    $description = '',
@@ -61,6 +62,7 @@ class Payment implements PaymentFacade
             $paymentId,
             $amount,
             $currency,
+            $paymentType,
             $successReturnUrl,
             $failReturnUrl,
             $description,
@@ -363,5 +365,15 @@ class Payment implements PaymentFacade
     public function getName()
     {
         return $this->getCurrentDriver()->getName();
+    }
+
+    /**
+     * Get payment id
+     *
+     * @return string
+     */
+    public function getPaymentId()
+    {
+        return $this->getCurrentDriver()->getPaymentId();
     }
 }
