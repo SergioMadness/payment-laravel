@@ -2,7 +2,7 @@
 
 use professionalweb\payment\drivers\payonline\Receipt;
 use professionalweb\payment\drivers\payonline\ReceiptItem;
-use professionalweb\payment\services\payonline\ReceiptService;
+use professionalweb\payment\services\ReceiptService;
 
 class PayOnlineReceiptServiceTest extends \Codeception\Test\Unit
 {

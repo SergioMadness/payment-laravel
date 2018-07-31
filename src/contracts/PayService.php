@@ -130,7 +130,7 @@ interface PayService
     public function getProvider();
 
     /**
-     * Get PAn
+     * Get PAN
      *
      * @return string
      */

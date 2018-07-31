@@ -30,9 +30,7 @@
     "source": "https://github.com/SergioMadness/payonline/releases"
   },
   "require": {
-    "illuminate/support": "5.2.* || 5.3.* || 5.4.* || 5.5.*",
-    "alcohol/iso4217": "*",
-    "yandex-money/yandex-checkout-sdk-php": "1.0.*"
+    "illuminate/support": "5.2.* || 5.3.* || 5.4.* || 5.5.*"
   },
   "require-dev": {
     "codeception/codeception": "*",
@@ -46,5 +44,10 @@
     "psr-4": {
       "professionalweb\\payment\\": "src/"
     }
+  },
+  "suggest": {
+    "professionalweb/payment-laravel-payonline": "Driver for PayOnline",
+    "professionalweb/payment-laravel-tinkoff": "Driver for Tinkoff",
+    "professionalweb/payment-laravel-yandex": "Driver for Kassa.Yandex"
   }
 }

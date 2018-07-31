@@ -376,4 +376,17 @@ class Payment implements PaymentFacade
     {
         return $this->getCurrentDriver()->getPaymentId();
     }
+
+    /**
+     * Register driver
+     *
+     * @param string $alias
+     * @param string $className
+     *
+     * @return PayService
+     */
+    public function registerDriver($alias, $className)
+    {
+        return $this->addDriver($alias, $className);
+    }
 }
