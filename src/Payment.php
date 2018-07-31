@@ -389,4 +389,14 @@ class Payment implements PaymentFacade
     {
         return $this->addDriver($alias, $className);
     }
+
+    /**
+     * Get available drivers
+     *
+     * @return array
+     */
+    public function drivers()
+    {
+        return array_keys($this->drivers);
+    }
 }
