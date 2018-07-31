@@ -1,7 +1,8 @@
 <?php namespace professionalweb\payment;
 
+use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
-use professionalweb\payment\contracts\PayService;
+use professionalweb\payment\facades\Payment;
 use professionalweb\payment\contracts\PaymentFacade;
 
 /**
@@ -10,12 +11,14 @@ use professionalweb\payment\contracts\PaymentFacade;
  */
 class PaymentProvider extends ServiceProvider
 {
-    /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
+
     protected $defer = true;
+
+    public function boot()
+    {
+        $loader = AliasLoader::getInstance();
+        $loader->alias('Payment', Payment::class);
+    }
 
     /**
      * Bind two classes
@@ -25,7 +28,6 @@ class PaymentProvider extends ServiceProvider
     public function register()
     {
         $facade = new Payment();
-        $this->app->instance(PayService::class, $facade);
         $this->app->instance('\Payment', $facade);
         $this->app->instance(PaymentFacade::class, $facade);
     }
@@ -37,6 +39,6 @@ class PaymentProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['\Payment', PayService::class, PaymentFacade::class];
+        return ['\Payment', PaymentFacade::class];
     }
 }
