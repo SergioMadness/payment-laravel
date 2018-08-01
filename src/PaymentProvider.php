@@ -2,7 +2,6 @@
 
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
-use professionalweb\payment\facades\Payment;
 use professionalweb\payment\contracts\PaymentFacade;
 
 /**
