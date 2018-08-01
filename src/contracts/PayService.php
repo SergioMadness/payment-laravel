@@ -15,8 +15,8 @@ interface PayService
     const CURRENCY_RUR = 'RUB';
     const CURRENCY_RUR_ISO = 643;
 
-    const CURRENCY_UAH='UAH';
-    const CURRENCY_UAH_IC='UAH';
+    const CURRENCY_UAH = 'UAH';
+    const CURRENCY_UAH_ISO = 980;
 
     const PAYMENT_TYPE_CARD = 'card';
     const PAYMENT_TYPE_CASH = 'cash';
