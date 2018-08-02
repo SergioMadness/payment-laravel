@@ -12,6 +12,8 @@
     "payonline",
     "tinkoff",
     "yandex.kassa",
+    "CNP Processing GmbH (processing.kz)",
+    "upc.ua",
     "laravel"
   ],
   "minimum-stability": "stable",

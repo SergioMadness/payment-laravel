@@ -18,6 +18,9 @@ interface PayService
     const CURRENCY_UAH = 'UAH';
     const CURRENCY_UAH_ISO = 980;
 
+    const CURRENCY_KZT = 'KZT';
+    const CURRENCY_KZT_ISO = 398;
+
     const PAYMENT_TYPE_CARD = 'card';
     const PAYMENT_TYPE_CASH = 'cash';
     const PAYMENT_TYPE_MOBILE = 'mobile';
@@ -39,6 +42,7 @@ interface PayService
      * @param int       $paymentId
      * @param float     $amount
      * @param string    $currency
+     * @param string    $paymentType
      * @param string    $successReturnUrl
      * @param string    $failReturnUrl
      * @param string    $description
