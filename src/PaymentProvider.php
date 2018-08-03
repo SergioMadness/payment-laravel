@@ -3,6 +3,7 @@
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 use professionalweb\payment\contracts\PaymentFacade;
+use professionalweb\payment\facades\Payment as LPaymenFacade;
 
 /**
  * Facade for providers
@@ -16,7 +17,7 @@ class PaymentProvider extends ServiceProvider
     public function boot()
     {
         $loader = AliasLoader::getInstance();
-        $loader->alias('Payment', Payment::class);
+        $loader->alias('Payment', LPaymenFacade::class);
     }
 
     /**
