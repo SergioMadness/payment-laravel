@@ -12,8 +12,6 @@ use professionalweb\payment\facades\Payment as LPaymenFacade;
 class PaymentProvider extends ServiceProvider
 {
 
-    protected $defer = true;
-
     public function boot()
     {
         $loader = AliasLoader::getInstance();
@@ -30,15 +28,5 @@ class PaymentProvider extends ServiceProvider
         $facade = new Payment();
         $this->app->instance('\Payment', $facade);
         $this->app->instance(PaymentFacade::class, $facade);
-    }
-
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-        return ['\Payment', PaymentFacade::class];
     }
 }
