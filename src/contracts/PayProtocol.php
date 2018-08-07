@@ -17,6 +17,15 @@ interface PayProtocol
     public function getPaymentUrl($params);
 
     /**
+     * Prepare parameters
+     *
+     * @param array $params
+     *
+     * @return array
+     */
+    public function prepareParams($params);
+
+    /**
      * Validate params
      *
      * @param mixed $params

@@ -72,10 +72,7 @@ class Form implements IForm
      */
     public function addField($name, $value = '')
     {
-        $this->fields[] = [
-            'name'  => $name,
-            'value' => $value,
-        ];
+        $this->fields[$name] = $value;
 
         return $this;
     }
@@ -101,14 +98,47 @@ class Form implements IForm
      */
     public function render()
     {
-        $result = '<form method="' . $this->method . '" action="' . $this->url . '">' . "\r\n";
+        $result = '<form method="' . $this->getMethod() . '" action="' . $this->getAction() . '">' . "\r\n";
 
-        foreach ($this->fields as $field) {
-            $result .= '<input type="hidden" name="' . $field['name'] . '" value="' . $field['value'] . '"/>' . "\r\n";
-        }
+        $result .= $this->renderFields();
 
         $result .= '</form>' . "\r\n";
 
         return $result;
+    }
+
+    /**
+     * Render fields
+     *
+     * @return string
+     */
+    public function renderFields()
+    {
+        $result = '';
+        foreach ($this->fields as $field => $value) {
+            $result .= '<input type="hidden" name="' . $field . '" value="' . $value . '"/>' . "\r\n";
+        }
+
+        return $result;
+    }
+
+    /**
+     * Form action
+     *
+     * @return string
+     */
+    public function getAction()
+    {
+        return $this->url;
+    }
+
+    /**
+     * Get form method
+     *
+     * @return string
+     */
+    public function getMethod()
+    {
+        return $this->method;
     }
 }

@@ -12,4 +12,25 @@ interface Form
      * @return string
      */
     public function render();
+
+    /**
+     * Render fields
+     *
+     * @return string
+     */
+    public function renderFields();
+
+    /**
+     * Form action
+     *
+     * @return string
+     */
+    public function getAction();
+
+    /**
+     * Get form method
+     *
+     * @return string
+     */
+    public function getMethod();
 }
