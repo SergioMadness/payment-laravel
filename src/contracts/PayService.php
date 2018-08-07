@@ -68,7 +68,7 @@ interface PayService
      *
      * @return bool
      */
-    public function needForm():bool;
+    public function needForm();
 
     /**
      * Generate payment form

@@ -1,6 +1,7 @@
 <?php namespace professionalweb\payment;
 
 use Illuminate\Contracts\Support\Arrayable;
+use professionalweb\payment\contracts\Form;
 use professionalweb\payment\contracts\PayService;
 use professionalweb\payment\contracts\PayProtocol;
 use professionalweb\payment\contracts\PaymentFacade;
@@ -406,7 +407,7 @@ class Payment implements PaymentFacade
      *
      * @return bool
      */
-    public function needForm(): bool
+    public function needForm()
     {
         return $this->getCurrentDriver()->needForm();
     }
@@ -425,7 +426,7 @@ class Payment implements PaymentFacade
      * @param array     $extraParams
      * @param Arrayable $receipt
      *
-     * @return string
+     * @return Form
      */
     public function getPaymentForm($orderId,
                                    $paymentId,
