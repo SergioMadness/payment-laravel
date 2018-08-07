@@ -12,7 +12,8 @@
     "payonline",
     "tinkoff",
     "yandex.kassa",
-    "CNP Processing GmbH (processing.kz)",
+    "CNP Processing GmbH",
+    "processing.kz",
     "upc.ua",
     "laravel"
   ],
