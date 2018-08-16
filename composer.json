@@ -28,9 +28,9 @@
   ],
   "support": {
     "email": "info@web-development.pw",
-    "issues": "https://github.com/SergioMadness/payonline/issues",
-    "wiki": "https://github.com/SergioMadness/payonline/wiki",
-    "source": "https://github.com/SergioMadness/payonline/releases"
+    "issues": "https://github.com/SergioMadness/payment-laravel/issues",
+    "wiki": "https://github.com/SergioMadness/payment-laravel/wiki",
+    "source": "https://github.com/SergioMadness/payment-laravel/releases"
   },
   "require": {
     "illuminate/support": "5.2.* || 5.3.* || 5.4.* || 5.5.*"
