@@ -28,4 +28,21 @@ interface PaymentFacade extends PayService
      * @return string
      */
     public function getDriverName();
+
+    /**
+     * Register driver
+     *
+     * @param string $alias
+     * @param string $className
+     *
+     * @return PayService
+     */
+    public function registerDriver($alias, $className);
+
+    /**
+     * Get available drivers
+     *
+     * @return array
+     */
+    public function drivers();
 }

@@ -1,11 +1,9 @@
 <?php namespace professionalweb\payment;
 
+use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
-use professionalweb\payment\contracts\PayService;
 use professionalweb\payment\contracts\PaymentFacade;
-use professionalweb\payment\drivers\yandex\YandexDriver;
-use professionalweb\payment\drivers\tinkoff\TinkoffDriver;
-use professionalweb\payment\drivers\payonline\PayOnlineDriver;
+use professionalweb\payment\facades\Payment as LPaymenFacade;
 
 /**
  * Facade for providers
@@ -13,16 +11,12 @@ use professionalweb\payment\drivers\payonline\PayOnlineDriver;
  */
 class PaymentProvider extends ServiceProvider
 {
-    const PAYMENT_TINKOFF = 'tinkoff';
-    const PAYMENT_PAYONLINE = 'payonline';
-    const PAYMENT_YANDEX = 'yandex';
 
-    /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    protected $defer = true;
+    public function boot()
+    {
+        $loader = AliasLoader::getInstance();
+        $loader->alias('Payment', LPaymenFacade::class);
+    }
 
     /**
      * Bind two classes
@@ -31,32 +25,8 @@ class PaymentProvider extends ServiceProvider
      */
     public function register()
     {
-        (new PayOnlineProvider($this->app))->register();
-        (new TinkoffProvider($this->app))->register();
-        (new YandexProvider($this->app))->register();
-
-        $facade = $this->getFacade();
-        $this->app->instance(PayService::class, $facade);
+        $facade = new Payment();
         $this->app->instance('\Payment', $facade);
         $this->app->instance(PaymentFacade::class, $facade);
-    }
-
-    protected function getFacade()
-    {
-        return (new Payment())->setDrivers([
-            self::PAYMENT_TINKOFF   => TinkoffDriver::class,
-            self::PAYMENT_PAYONLINE => PayOnlineDriver::class,
-            self::PAYMENT_YANDEX    => YandexDriver::class,
-        ])->setCurrentDriver(config('payment.default_driver'));
-    }
-
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-        return ['\Payment', PayService::class, PaymentFacade::class];
     }
 }

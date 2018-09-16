@@ -1,6 +1,6 @@
 {
   "name": "professionalweb/payment-laravel",
-  "version": "2.2.4",
+  "version": "3.0.0",
   "description": "Payment drivers for laravel",
   "homepage": "http://web-development.pw/",
   "keywords": [
@@ -12,6 +12,9 @@
     "payonline",
     "tinkoff",
     "yandex.kassa",
+    "CNP Processing GmbH",
+    "processing.kz",
+    "upc.ua",
     "laravel"
   ],
   "minimum-stability": "stable",
@@ -25,18 +28,14 @@
   ],
   "support": {
     "email": "info@web-development.pw",
-    "issues": "https://github.com/SergioMadness/payonline/issues",
-    "wiki": "https://github.com/SergioMadness/payonline/wiki",
-    "source": "https://github.com/SergioMadness/payonline/releases"
+    "issues": "https://github.com/SergioMadness/payment-laravel/issues",
+    "wiki": "https://github.com/SergioMadness/payment-laravel/wiki",
+    "source": "https://github.com/SergioMadness/payment-laravel/releases"
   },
   "require": {
-    "illuminate/support": "5.2.* || 5.3.* || 5.4.* || 5.5.*",
-    "alcohol/iso4217": "*"
+    "illuminate/support": "5.*"
   },
   "require-dev": {
-    "codeception/codeception": "*",
-    "satooshi/php-coveralls": "*",
-    "codeclimate/php-test-reporter": "*"
   },
   "config": {
     "process-timeout": 1800
@@ -45,5 +44,10 @@
     "psr-4": {
       "professionalweb\\payment\\": "src/"
     }
+  },
+  "suggest": {
+    "professionalweb/payment-laravel-payonline": "Driver for PayOnline",
+    "professionalweb/payment-laravel-tinkoff": "Driver for Tinkoff",
+    "professionalweb/payment-laravel-yandex": "Driver for Kassa.Yandex"
   }
 }
