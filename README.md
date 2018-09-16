@@ -11,13 +11,7 @@ Project structure
 -------------------
 ```
 contracts/          Abstractions
-drivers/            Payment drivers
-    payonline/      PayOnline driver - https://payonline.ru/education/terms/
-    tinkoff/        Tinkoff driver - https://oplata.tinkoff.ru/documentation/
-    yandex/         Yandex.Kassa driver - https://tech.yandex.ru/money/doc/payment-solution/payment-notifications/payment-notifications-about-docpage/
 facades/            Payment facade
-services/           Different payment services
-    payonline/      Payonline services
 ```
 
 

@@ -15,6 +15,19 @@ interface PayService
     const CURRENCY_RUR = 'RUB';
     const CURRENCY_RUR_ISO = 643;
 
+    const CURRENCY_UAH = 'UAH';
+    const CURRENCY_UAH_ISO = 980;
+
+    const CURRENCY_KZT = 'KZT';
+    const CURRENCY_KZT_ISO = 398;
+
+    const PAYMENT_TYPE_CARD = 'card';
+    const PAYMENT_TYPE_CASH = 'cash';
+    const PAYMENT_TYPE_MOBILE = 'mobile';
+    const PAYMENT_TYPE_QIWI = 'qiwi';
+    const PAYMENT_TYPE_SBERBANK = 'sberbank';
+    const PAYMENT_TYPE_YANDEX_MONEY = 'yandex.money';
+
     /**
      * Get name of payment service
      *
@@ -25,14 +38,15 @@ interface PayService
     /**
      * Pay
      *
-     * @param int $orderId
-     * @param int $paymentId
-     * @param float $amount
-     * @param string $currency
-     * @param string $successReturnUrl
-     * @param string $failReturnUrl
-     * @param string $description
-     * @param array $extraParams
+     * @param int       $orderId
+     * @param int       $paymentId
+     * @param float     $amount
+     * @param string    $currency
+     * @param string    $paymentType
+     * @param string    $successReturnUrl
+     * @param string    $failReturnUrl
+     * @param string    $description
+     * @param array     $extraParams
      * @param Arrayable $receipt
      *
      * @return string
@@ -41,6 +55,42 @@ interface PayService
                                    $paymentId,
                                    $amount,
                                    $currency = self::CURRENCY_RUR,
+                                   $paymentType = self::PAYMENT_TYPE_CARD,
+                                   $successReturnUrl = '',
+                                   $failReturnUrl = '',
+                                   $description = '',
+                                   $extraParams = [],
+                                   $receipt = null);
+
+    /**
+     * Payment system need form
+     * You can not get url for redirect
+     *
+     * @return bool
+     */
+    public function needForm();
+
+    /**
+     * Generate payment form
+     *
+     * @param int       $orderId
+     * @param int       $paymentId
+     * @param float     $amount
+     * @param string    $currency
+     * @param string    $paymentType
+     * @param string    $successReturnUrl
+     * @param string    $failReturnUrl
+     * @param string    $description
+     * @param array     $extraParams
+     * @param Arrayable $receipt
+     *
+     * @return string
+     */
+    public function getPaymentForm($orderId,
+                                   $paymentId,
+                                   $amount,
+                                   $currency = self::CURRENCY_RUR,
+                                   $paymentType = self::PAYMENT_TYPE_CARD,
                                    $successReturnUrl = '',
                                    $failReturnUrl = '',
                                    $description = '',
@@ -71,6 +121,13 @@ interface PayService
      * @return string
      */
     public function getOrderId();
+
+    /**
+     * Get payment id
+     *
+     * @return string
+     */
+    public function getPaymentId();
 
     /**
      * Get operation status
@@ -115,7 +172,7 @@ interface PayService
     public function getProvider();
 
     /**
-     * Get PAn
+     * Get PAN
      *
      * @return string
      */

@@ -1,6 +1,7 @@
 <?php namespace professionalweb\payment;
 
 use Illuminate\Contracts\Support\Arrayable;
+use professionalweb\payment\contracts\Form;
 use professionalweb\payment\contracts\PayService;
 use professionalweb\payment\contracts\PayProtocol;
 use professionalweb\payment\contracts\PaymentFacade;
@@ -51,6 +52,7 @@ class Payment implements PaymentFacade
                                    $paymentId,
                                    $amount,
                                    $currency = self::CURRENCY_RUR,
+                                   $paymentType = self::PAYMENT_TYPE_CARD,
                                    $successReturnUrl = '',
                                    $failReturnUrl = '',
                                    $description = '',
@@ -61,6 +63,7 @@ class Payment implements PaymentFacade
             $paymentId,
             $amount,
             $currency,
+            $paymentType,
             $successReturnUrl,
             $failReturnUrl,
             $description,
@@ -363,5 +366,88 @@ class Payment implements PaymentFacade
     public function getName()
     {
         return $this->getCurrentDriver()->getName();
+    }
+
+    /**
+     * Get payment id
+     *
+     * @return string
+     */
+    public function getPaymentId()
+    {
+        return $this->getCurrentDriver()->getPaymentId();
+    }
+
+    /**
+     * Register driver
+     *
+     * @param string $alias
+     * @param string $className
+     *
+     * @return PayService
+     */
+    public function registerDriver($alias, $className)
+    {
+        return $this->addDriver($alias, $className);
+    }
+
+    /**
+     * Get available drivers
+     *
+     * @return array
+     */
+    public function drivers()
+    {
+        return array_keys($this->drivers);
+    }
+
+    /**
+     * Payment system need form
+     * You can not get url for redirect
+     *
+     * @return bool
+     */
+    public function needForm()
+    {
+        return $this->getCurrentDriver()->needForm();
+    }
+
+    /**
+     * Generate payment form
+     *
+     * @param int       $orderId
+     * @param int       $paymentId
+     * @param float     $amount
+     * @param string    $currency
+     * @param string    $paymentType
+     * @param string    $successReturnUrl
+     * @param string    $failReturnUrl
+     * @param string    $description
+     * @param array     $extraParams
+     * @param Arrayable $receipt
+     *
+     * @return Form
+     */
+    public function getPaymentForm($orderId,
+                                   $paymentId,
+                                   $amount,
+                                   $currency = self::CURRENCY_RUR,
+                                   $paymentType = self::PAYMENT_TYPE_CARD,
+                                   $successReturnUrl = '',
+                                   $failReturnUrl = '',
+                                   $description = '',
+                                   $extraParams = [],
+                                   $receipt = null)
+    {
+        return $this->getCurrentDriver()->getPaymentForm($orderId,
+            $paymentId,
+            $amount,
+            $currency,
+            $paymentType,
+            $successReturnUrl,
+            $failReturnUrl,
+            $description,
+            $extraParams,
+            $receipt);
     }
 }
