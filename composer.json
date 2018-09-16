@@ -33,12 +33,9 @@
     "source": "https://github.com/SergioMadness/payment-laravel/releases"
   },
   "require": {
-    "illuminate/support": "5.2.* || 5.3.* || 5.4.* || 5.5.*"
+    "illuminate/support": "5.*"
   },
   "require-dev": {
-    "codeception/codeception": "*",
-    "satooshi/php-coveralls": "*",
-    "codeclimate/php-test-reporter": "*"
   },
   "config": {
     "process-timeout": 1800
