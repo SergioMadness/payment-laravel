@@ -460,6 +460,6 @@ class Payment implements PaymentFacade
      */
     public function getOptions(): array
     {
-        // TODO: Implement getOptions() method.
+        return $this->getCurrentDriver()->getOptions();
     }
 }
