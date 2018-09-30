@@ -50,5 +50,12 @@
     "professionalweb/payment-laravel-payonline": "Driver for PayOnline",
     "professionalweb/payment-laravel-tinkoff": "Driver for Tinkoff",
     "professionalweb/payment-laravel-yandex": "Driver for Kassa.Yandex"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "professionalweb\\payment\\PaymentProvider"
+      ]
+    }
   }
 }
