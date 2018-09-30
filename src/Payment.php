@@ -439,7 +439,7 @@ class Payment implements PaymentFacade
                                    string $failReturnUrl = '',
                                    string $description = '',
                                    array $extraParams = [],
-                                   Receipt $receipt = null): string
+                                   Receipt $receipt = null): Form
     {
         return $this->getCurrentDriver()->getPaymentForm($orderId,
             $paymentId,

@@ -83,7 +83,7 @@ interface PayService
      * @param array   $extraParams
      * @param Receipt $receipt
      *
-     * @return string
+     * @return Form
      */
     public function getPaymentForm($orderId,
                                    $paymentId,
@@ -94,7 +94,7 @@ interface PayService
                                    string $failReturnUrl = '',
                                    string $description = '',
                                    array $extraParams = [],
-                                   Receipt $receipt = null): string;
+                                   Receipt $receipt = null): Form;
 
     /**
      * Validate request
