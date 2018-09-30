@@ -1,8 +1,8 @@
 <?php namespace professionalweb\payment\drivers\receipt;
 
-use Illuminate\Contracts\Support\Arrayable;
+use professionalweb\payment\contracts\ReceiptItem as IReceiptItem;
 
-abstract class ReceiptItem implements Arrayable
+abstract class ReceiptItem implements IReceiptItem
 {
     /**
      * Quantity
@@ -44,12 +44,12 @@ abstract class ReceiptItem implements Arrayable
      * ReceiptItem constructor.
      *
      * @param string $name
-     * @param int $qty
-     * @param float $price
-     * @param int $tax
+     * @param int    $qty
+     * @param float  $price
+     * @param int    $tax
      * @param string $currency
      */
-    public function __construct($name = null, $qty = null, $price = null, $tax = null, $currency = 'RUR')
+    public function __construct(string $name = null, int $qty = null, float $price = null, int $tax = null, string $currency = 'RUR')
     {
         $this->setName($name)->setQty($qty)->setPrice($price)->setTax($tax)->setCurrency($currency);
     }
@@ -59,7 +59,7 @@ abstract class ReceiptItem implements Arrayable
      *
      * @return int
      */
-    public function getQty()
+    public function getQty(): int
     {
         return $this->qty;
     }
@@ -71,7 +71,7 @@ abstract class ReceiptItem implements Arrayable
      *
      * @return $this
      */
-    public function setQty($qty)
+    public function setQty(int $qty): self
     {
         $this->qty = $qty;
 
@@ -83,7 +83,7 @@ abstract class ReceiptItem implements Arrayable
      *
      * @return float
      */
-    public function getPrice()
+    public function getPrice(): float
     {
         return $this->price;
     }
@@ -95,7 +95,7 @@ abstract class ReceiptItem implements Arrayable
      *
      * @return $this
      */
-    public function setPrice($price)
+    public function setPrice(float $price): self
     {
         $this->price = $price;
 
@@ -107,7 +107,7 @@ abstract class ReceiptItem implements Arrayable
      *
      * @return string
      */
-    public function getCurrency()
+    public function getCurrency(): string
     {
         return $this->currency;
     }
@@ -119,7 +119,7 @@ abstract class ReceiptItem implements Arrayable
      *
      * @return $this
      */
-    public function setCurrency($currency)
+    public function setCurrency(string $currency): self
     {
         $this->currency = $currency;
 
@@ -131,7 +131,7 @@ abstract class ReceiptItem implements Arrayable
      *
      * @return int
      */
-    public function getTax()
+    public function getTax(): int
     {
         return $this->tax;
     }
@@ -143,7 +143,7 @@ abstract class ReceiptItem implements Arrayable
      *
      * @return $this
      */
-    public function setTax($tax)
+    public function setTax(int $tax): self
     {
         $this->tax = $tax;
 
@@ -155,7 +155,7 @@ abstract class ReceiptItem implements Arrayable
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -167,7 +167,7 @@ abstract class ReceiptItem implements Arrayable
      *
      * @return $this
      */
-    public function setName($name)
+    public function setName(string $name): self
     {
         $this->name = $name;
 

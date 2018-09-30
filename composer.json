@@ -1,6 +1,6 @@
 {
   "name": "professionalweb/payment-laravel",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "Payment drivers for laravel",
   "homepage": "http://web-development.pw/",
   "keywords": [
@@ -33,7 +33,8 @@
     "source": "https://github.com/SergioMadness/payment-laravel/releases"
   },
   "require": {
-    "illuminate/support": "5.*"
+    "php": "^7.1",
+    "laravel/laravel": "5.*"
   },
   "require-dev": {
   },

@@ -1,8 +1,8 @@
 <?php namespace professionalweb\payment\drivers\receipt;
 
-use Illuminate\Contracts\Support\Arrayable;
+use professionalweb\payment\contracts\Receipt as IReceipt;
 
-abstract class Receipt implements Arrayable
+abstract class Receipt implements IReceipt
 {
     /**
      * Phone number or e-mail
@@ -13,7 +13,9 @@ abstract class Receipt implements Arrayable
 
     /**
      * Tax system
-     * Система налогообложения магазина (СНО). Параметр необходим, только если у вас несколько систем налогообложения. В остальных случаях не передается.
+     * Система налогообложения магазина (СНО).
+     * Параметр необходим, только если у вас несколько систем налогообложения.
+     * В остальных случаях не передается.
      *
      * @var int
      */
@@ -33,7 +35,7 @@ abstract class Receipt implements Arrayable
      * @param array|null $items
      * @param int        $taxSystem
      */
-    public function __construct($contact = null, array $items = [], $taxSystem = null)
+    public function __construct(string $contact = null, array $items = [], int $taxSystem = null)
     {
         $this->setContact($contact)->setItems($items)->setTaxSystem($taxSystem);
     }
@@ -43,7 +45,7 @@ abstract class Receipt implements Arrayable
      *
      * @return string
      */
-    public function getContact()
+    public function getContact(): string
     {
         return $this->contact;
     }
@@ -55,7 +57,7 @@ abstract class Receipt implements Arrayable
      *
      * @return $this
      */
-    public function setContact($contact)
+    public function setContact(string $contact): self
     {
         $this->contact = $contact;
 
@@ -67,7 +69,7 @@ abstract class Receipt implements Arrayable
      *
      * @return int
      */
-    public function getTaxSystem()
+    public function getTaxSystem(): int
     {
         return $this->taxSystem;
     }
@@ -79,7 +81,7 @@ abstract class Receipt implements Arrayable
      *
      * @return $this
      */
-    public function setTaxSystem($taxSystem)
+    public function setTaxSystem(int $taxSystem): self
     {
         $this->taxSystem = $taxSystem;
 
@@ -91,7 +93,7 @@ abstract class Receipt implements Arrayable
      *
      * @return ReceiptItem[]
      */
-    public function getItems()
+    public function getItems(): array
     {
         return $this->items;
     }
@@ -103,7 +105,7 @@ abstract class Receipt implements Arrayable
      *
      * @return $this
      */
-    public function setItems(array $items)
+    public function setItems(array $items): self
     {
         $this->items = $items;
 
@@ -117,7 +119,7 @@ abstract class Receipt implements Arrayable
      *
      * @return $this
      */
-    public function addItem(ReceiptItem $item)
+    public function addItem(ReceiptItem $item): self
     {
         $this->items[] = $item;
 

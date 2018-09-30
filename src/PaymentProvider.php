@@ -12,10 +12,9 @@ use professionalweb\payment\facades\Payment as LPaymenFacade;
 class PaymentProvider extends ServiceProvider
 {
 
-    public function boot()
+    public function boot(): void
     {
-        $loader = AliasLoader::getInstance();
-        $loader->alias('Payment', LPaymenFacade::class);
+        $this->app->alias('Payment', LPaymenFacade::class);
     }
 
     /**
@@ -23,7 +22,7 @@ class PaymentProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         $facade = new Payment();
         $this->app->instance('\Payment', $facade);

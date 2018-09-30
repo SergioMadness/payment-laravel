@@ -13,21 +13,21 @@ interface PaymentFacade extends PayService
      *
      * @return $this
      */
-    public function setCurrentDriver($name);
+    public function setCurrentDriver(string $name): PayService;
 
     /**
      * Get current driver name
      *
      * @return PayService
      */
-    public function getCurrentDriver();
+    public function getCurrentDriver(): ?PayService;
 
     /**
      * Get name of current driver
      *
      * @return string
      */
-    public function getDriverName();
+    public function getDriverName(): string;
 
     /**
      * Register driver
@@ -37,12 +37,12 @@ interface PaymentFacade extends PayService
      *
      * @return PayService
      */
-    public function registerDriver($alias, $className);
+    public function registerDriver(string $alias, string $className): PayService;
 
     /**
      * Get available drivers
      *
      * @return array
      */
-    public function drivers();
+    public function drivers(): array;
 }

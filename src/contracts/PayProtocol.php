@@ -10,11 +10,11 @@ interface PayProtocol
     /**
      * Get payment URL
      *
-     * @param mixed $params
+     * @param array $params
      *
      * @return string
      */
-    public function getPaymentUrl($params);
+    public function getPaymentUrl(array $params): string;
 
     /**
      * Prepare parameters
@@ -23,23 +23,23 @@ interface PayProtocol
      *
      * @return array
      */
-    public function prepareParams($params);
+    public function prepareParams(array $params): array;
 
     /**
      * Validate params
      *
-     * @param mixed $params
+     * @param array $params
      *
      * @return bool
      */
-    public function validate($params);
+    public function validate(array $params): bool;
 
     /**
      * Get payment ID
      *
-     * @return mixed
+     * @return string
      */
-    public function getPaymentId();
+    public function getPaymentId(): string;
 
     /**
      * Prepare response on notification request
@@ -49,7 +49,7 @@ interface PayProtocol
      *
      * @return string
      */
-    public function getNotificationResponse($requestData, $errorCode);
+    public function getNotificationResponse($requestData, $errorCode): string;
 
     /**
      * Prepare response on check request
@@ -59,5 +59,5 @@ interface PayProtocol
      *
      * @return string
      */
-    public function getCheckResponse($requestData, $errorCode);
+    public function getCheckResponse($requestData, $errorCode): string;
 }
