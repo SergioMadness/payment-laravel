@@ -14,7 +14,8 @@ class PaymentProvider extends ServiceProvider
 
     public function boot(): void
     {
-        $this->app->alias('Payment', LPaymenFacade::class);
+        $loader = AliasLoader::getInstance();
+        $loader->alias('Payment', LPaymenFacade::class);
     }
 
     /**

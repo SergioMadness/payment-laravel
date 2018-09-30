@@ -45,4 +45,13 @@ interface PaymentFacade extends PayService
      * @return array
      */
     public function drivers(): array;
+
+    /**
+     * Build driber by name
+     *
+     * @param string $driver
+     *
+     * @return null|PayService
+     */
+    public function driverInstance(string $driver): ?PayService;
 }

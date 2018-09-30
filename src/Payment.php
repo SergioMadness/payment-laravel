@@ -129,9 +129,9 @@ class Payment implements PaymentFacade
      *
      * @param string $name
      *
-     * @return mixed
+     * @return null|string
      */
-    public function getDriver($name): ?PayService
+    public function getDriver($name): ?string
     {
         return $this->getDrivers()[$name];
     }
@@ -461,5 +461,23 @@ class Payment implements PaymentFacade
     public function getOptions(): array
     {
         return $this->getCurrentDriver()->getOptions();
+    }
+
+    /**
+     * Build driber by name
+     *
+     * @param string $driver
+     *
+     * @return null|PayService
+     */
+    public function driverInstance(string $driver): ?PayService
+    {
+        if (($driverClass = $this->getDriver($driver)) !== null) {
+            return app($driverClass, [
+                'config' => config('payment.' . $driverClass),
+            ]);
+        }
+
+        return null;
     }
 }
