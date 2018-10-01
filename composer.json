@@ -1,6 +1,5 @@
 {
   "name": "professionalweb/payment-laravel",
-  "version": "3.0.0",
   "description": "Payment drivers for laravel",
   "homepage": "http://web-development.pw/",
   "keywords": [
