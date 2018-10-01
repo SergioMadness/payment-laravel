@@ -27,6 +27,7 @@ interface PayService
     const PAYMENT_TYPE_QIWI = 'qiwi';
     const PAYMENT_TYPE_SBERBANK = 'sberbank';
     const PAYMENT_TYPE_YANDEX_MONEY = 'yandex.money';
+    const PAYMENT_TYPE_ALFABANK = 'alfabank';
 
     /**
      * Get name of payment service
