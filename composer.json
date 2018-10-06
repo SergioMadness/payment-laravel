@@ -1,6 +1,5 @@
 {
   "name": "professionalweb/payment-laravel",
-  "version": "4.0.0",
   "description": "Payment drivers for laravel",
   "homepage": "http://web-development.pw/",
   "keywords": [
@@ -49,7 +48,9 @@
   "suggest": {
     "professionalweb/payment-laravel-payonline": "Driver for PayOnline",
     "professionalweb/payment-laravel-tinkoff": "Driver for Tinkoff",
-    "professionalweb/payment-laravel-yandex": "Driver for Kassa.Yandex"
+    "professionalweb/payment-laravel-yandex": "Driver for Kassa.Yandex",
+    "professionalweb/payment-laravel-cnp": "Driver for Processing.kz",
+    "professionalweb/payment-laravel-upc": "Driver for UA processing"
   },
   "extra": {
     "laravel": {
