@@ -33,7 +33,7 @@
   },
   "require": {
     "php": "^7.1",
-    "laravel/laravel": "5.*"
+    "illuminate/support": "5.*"
   },
   "require-dev": {
   },
@@ -57,6 +57,9 @@
       "providers": [
         "professionalweb\\payment\\PaymentProvider"
       ]
+    },
+    "branch-alias": {
+      "dev-improvement/interface-add-options": "3.1.x-dev"
     }
   }
 }
