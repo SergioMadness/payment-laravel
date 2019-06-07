@@ -12,4 +12,11 @@ interface RecurringPayment
      * @return string
      */
     public function getRecurringPayment(): string;
+
+    /**
+     * Remember payment fo recurring payments
+     *
+     * @return RecurringPayment
+     */
+    public function makeRecurring(): self;
 }
