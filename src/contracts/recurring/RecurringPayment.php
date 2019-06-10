@@ -19,4 +19,13 @@ interface RecurringPayment
      * @return RecurringPayment
      */
     public function makeRecurring(): self;
+
+    /**
+     * Set user id payment will be assigned
+     *
+     * @param string $id
+     *
+     * @return RecurringPayment
+     */
+    public function setUserId(string $id): self;
 }
