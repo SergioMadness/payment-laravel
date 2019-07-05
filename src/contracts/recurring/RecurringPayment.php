@@ -14,6 +14,15 @@ interface RecurringPayment
     public function getRecurringPayment(): string;
 
     /**
+     * Initialize recurring payment
+     *
+     * @param string $token
+     *
+     * @return bool
+     */
+    public function initPayment(string $token): bool;
+
+    /**
      * Remember payment fo recurring payments
      *
      * @return RecurringPayment
