@@ -1,5 +1,7 @@
 <?php namespace professionalweb\payment\contracts\recurring;
 
+use professionalweb\payment\contracts\PayService;
+
 /**
  * Interface for payment systems have recurring payments
  * @package professionalweb\payment\contracts\recurring
@@ -17,10 +19,13 @@ interface RecurringPayment
      * Initialize recurring payment
      *
      * @param string $token
+     * @param float  $amount
+     * @param string $description
+     * @param string $currency
      *
      * @return bool
      */
-    public function initPayment(string $token): bool;
+    public function initPayment(string $token, float $amount, string $description, string $currency = PayService::CURRENCY_RUR_ISO): bool;
 
     /**
      * Remember payment fo recurring payments
