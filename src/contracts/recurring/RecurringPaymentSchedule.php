@@ -20,7 +20,7 @@ interface RecurringPaymentSchedule
      *
      * @return string Schedule id/token
      */
-    public function saveSchedule(RecurringSchedule $schedule = null): string;
+    public function saveSchedule(RecurringSchedule $schedule): string;
 
     /**
      * Remove schedule
@@ -43,7 +43,9 @@ interface RecurringPaymentSchedule
     /**
      * Get list of schedules
      *
+     * @param string|null $accountId
+     *
      * @return array|[]RecurringSchedule
      */
-    public function getAllSchedules(): array;
+    public function getAllSchedules(string $accountId = null): array;
 }

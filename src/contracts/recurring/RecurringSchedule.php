@@ -1,10 +1,12 @@
 <?php namespace professionalweb\payment\contracts\recurring;
 
+use Illuminate\Contracts\Support\Arrayable;
+
 /**
  * Interface for schedule
  * @package professionalweb\payment\contracts\recurring
  */
-interface RecurringSchedule
+interface RecurringSchedule extends Arrayable
 {
     /**
      * Set payment token
