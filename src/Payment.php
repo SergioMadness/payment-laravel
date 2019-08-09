@@ -6,6 +6,8 @@ use professionalweb\payment\contracts\Receipt;
 use professionalweb\payment\contracts\PayService;
 use professionalweb\payment\contracts\PayProtocol;
 use professionalweb\payment\contracts\PaymentFacade;
+use professionalweb\payment\contracts\recurring\RecurringPayment;
+use professionalweb\payment\contracts\recurring\RecurringPaymentSchedule;
 
 /**
  * Payment facade
@@ -479,5 +481,17 @@ class Payment implements PaymentFacade
         }
 
         return null;
+    }
+
+    /**
+     * Check driver has recurring payments
+     *
+     * @return bool
+     */
+    public function hasRecurring(): bool
+    {
+        $driver = $this->getCurrentDriver();
+
+        return $driver instanceof RecurringPayment || $driver instanceof RecurringPaymentSchedule;
     }
 }

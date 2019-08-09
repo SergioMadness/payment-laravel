@@ -54,4 +54,11 @@ interface PaymentFacade extends PayService
      * @return null|PayService
      */
     public function driverInstance(string $driver): ?PayService;
+
+    /**
+     * Check driver has recurring payments
+     *
+     * @return bool
+     */
+    public function hasRecurring(): bool;
 }
