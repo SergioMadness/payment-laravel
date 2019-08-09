@@ -494,4 +494,20 @@ class Payment implements PaymentFacade
 
         return $driver instanceof RecurringPayment || $driver instanceof RecurringPaymentSchedule;
     }
+
+    /**
+     * Make recurring
+     *
+     * @return PaymentFacade
+     */
+    public function makeRecurring(): PaymentFacade
+    {
+        if ($this->hasRecurring()) {
+            /** @var RecurringPayment|RecurringPaymentSchedule $driver */
+            $driver = $this->getCurrentDriver();
+            $driver->makeRecurring();
+        }
+
+        return $this;
+    }
 }

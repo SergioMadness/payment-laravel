@@ -61,4 +61,11 @@ interface PaymentFacade extends PayService
      * @return bool
      */
     public function hasRecurring(): bool;
+
+    /**
+     * Make recurring
+     *
+     * @return PaymentFacade
+     */
+    public function makeRecurring(): self;
 }
