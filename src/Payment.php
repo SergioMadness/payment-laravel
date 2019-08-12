@@ -482,32 +482,4 @@ class Payment implements PaymentFacade
 
         return null;
     }
-
-    /**
-     * Check driver has recurring payments
-     *
-     * @return bool
-     */
-    public function hasRecurring(): bool
-    {
-        $driver = $this->getCurrentDriver();
-
-        return $driver instanceof RecurringPayment || $driver instanceof RecurringPaymentSchedule;
-    }
-
-    /**
-     * Make recurring
-     *
-     * @return PaymentFacade
-     */
-    public function makeRecurring(): PaymentFacade
-    {
-        if ($this->hasRecurring()) {
-            /** @var RecurringPayment|RecurringPaymentSchedule $driver */
-            $driver = $this->getCurrentDriver();
-            $driver->makeRecurring();
-        }
-
-        return $this;
-    }
 }
