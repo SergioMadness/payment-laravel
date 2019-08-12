@@ -28,6 +28,9 @@ interface PayService
     public const PAYMENT_TYPE_YANDEX_MONEY = 'yandex.money';
     public const PAYMENT_TYPE_ALFABANK = 'alfabank';
 
+    public const RESPONSE_SUCCESS = 1;
+    public const RESPONSE_ERROR = 0;
+
     /**
      * Get name of payment service
      *
