@@ -7,6 +7,13 @@
 interface RecurringPaymentSchedule
 {
     /**
+     * Get payment token
+     *
+     * @return string
+     */
+    public function getRecurringPayment(): string;
+
+    /**
      * Create schedule
      *
      * @return RecurringSchedule
