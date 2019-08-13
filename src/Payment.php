@@ -400,7 +400,7 @@ class Payment implements PaymentFacade
      */
     public function drivers(): array
     {
-        return array_keys($this->drivers);
+        return $this->drivers;
     }
 
     /**
