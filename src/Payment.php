@@ -458,7 +458,7 @@ class Payment implements PaymentFacade
      *
      * @return array
      */
-    public function getOptions(): array
+    public static function getOptions(): array
     {
         return app(self::class)->getDriverOptions();
     }
