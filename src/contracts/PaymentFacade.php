@@ -35,9 +35,11 @@ interface PaymentFacade extends PayService
      * @param string $alias
      * @param string $className
      *
+     * @param array  $options
+     *
      * @return PayService
      */
-    public function registerDriver(string $alias, string $className): PayService;
+    public function registerDriver(string $alias, string $className, array $options = []): PayService;
 
     /**
      * Get available drivers

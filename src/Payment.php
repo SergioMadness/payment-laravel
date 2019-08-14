@@ -21,6 +21,13 @@ class Payment implements PaymentFacade
     private $drivers = [];
 
     /**
+     * Driver options
+     *
+     * @var array
+     */
+    private $driverOptions = [];
+
+    /**
      * Current driver
      *
      * @var PayService
@@ -386,11 +393,28 @@ class Payment implements PaymentFacade
      * @param string $alias
      * @param string $className
      *
+     * @param array  $options
+     *
      * @return PayService
      */
-    public function registerDriver(string $alias, string $className): PayService
+    public function registerDriver(string $alias, string $className, array $options = []): PayService
     {
         return $this->addDriver($alias, $className);
+    }
+
+    /**
+     * Set options for driver
+     *
+     * @param string $alias
+     * @param array  $options
+     *
+     * @return PayService
+     */
+    protected function addDriverOptions(string $alias, array $options): PayService
+    {
+        $this->driverOptions[$alias] = $options;
+
+        return $this;
     }
 
     /**
@@ -490,8 +514,6 @@ class Payment implements PaymentFacade
      */
     public function getDriverOptions(string $driver = null): array
     {
-        $driverClass = $this->getDriver($driver ?? $this->currentDriverName);
-
-        return $driverClass::getOptions();
+        return $this->driverOptions[$driver] ?? [];
     }
 }
