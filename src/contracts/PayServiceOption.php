@@ -14,6 +14,8 @@ interface PayServiceOption extends Arrayable
 
     public const TYPE_FILE = 'file';
 
+    public const TYPE_BOOL = 'bool';
+
     /**
      * Option alias
      *

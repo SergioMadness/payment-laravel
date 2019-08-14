@@ -399,7 +399,7 @@ class Payment implements PaymentFacade
      */
     public function registerDriver(string $alias, string $className, array $options = []): PayService
     {
-        return $this->addDriver($alias, $className);
+        return $this->addDriver($alias, $className)->addDriverOptions($alias, $options);
     }
 
     /**
