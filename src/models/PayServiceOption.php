@@ -90,4 +90,18 @@ class PayServiceOption implements IPayServiceOption
     {
         return $this->type;
     }
+
+    /**
+     * Get the instance as an array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            'alias' => $this->getAlias(),
+            'type'  => $this->getType(),
+            'label' => $this->getLabel(),
+        ];
+    }
 }

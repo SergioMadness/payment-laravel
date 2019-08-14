@@ -1,10 +1,12 @@
 <?php namespace professionalweb\payment\contracts;
 
+use Illuminate\Contracts\Support\Arrayable;
+
 /**
  * Interface for pay service option
  * @package professionalweb\payment\contracts
  */
-interface PayServiceOption
+interface PayServiceOption extends Arrayable
 {
     public const TYPE_STRING = 'string';
 
