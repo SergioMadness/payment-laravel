@@ -236,5 +236,5 @@ interface PayService
      *
      * @return array
      */
-    public function getOptions(): array;
+    public static function getOptions(): array;
 }

@@ -460,7 +460,7 @@ class Payment implements PaymentFacade
      */
     public function getOptions(): array
     {
-        return $this->getCurrentDriver()->getOptions();
+        return app(self::class)->getDriverOptions();
     }
 
     /**
@@ -479,5 +479,19 @@ class Payment implements PaymentFacade
         }
 
         return null;
+    }
+
+    /**
+     * Get driver options
+     *
+     * @param string|null $driver
+     *
+     * @return array
+     */
+    public function getDriverOptions(string $driver = null): array
+    {
+        $driverClass = $this->getDriver($driver ?? $this->currentDriverName);
+
+        return $driverClass::getOptions();
     }
 }
