@@ -19,7 +19,6 @@ interface RecurringPayment
      * Initialize recurring payment
      *
      * @param string $token
-     * @param string $accountId
      * @param string $paymentId
      * @param float  $amount
      * @param string $description
@@ -28,7 +27,7 @@ interface RecurringPayment
      *
      * @return bool
      */
-    public function initPayment(string $token, string $accountId, string $paymentId, float $amount, string $description, string $currency = PayService::CURRENCY_RUR_ISO, array $extraParams = []): bool;
+    public function initPayment(string $token, string $paymentId, float $amount, string $description, string $currency = PayService::CURRENCY_RUR_ISO, array $extraParams = []): bool;
 
     /**
      * Remember payment fo recurring payments
