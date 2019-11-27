@@ -30,6 +30,9 @@ interface PayService
 
     public const RESPONSE_SUCCESS = 1;
     public const RESPONSE_ERROR = 0;
+    public const RESPONSE_ERROR_WRONG_ORDER = 2;
+    public const RESPONSE_ERROR_WRONG_PAYMENT = 3;
+    public const RESPONSE_ERROR_WRONG_AMOUNT = 4;
 
     /**
      * Get name of payment service
