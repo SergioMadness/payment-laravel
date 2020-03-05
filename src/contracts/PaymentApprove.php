@@ -1,7 +1,17 @@
 <?php namespace professionalweb\payment\contracts;
 
+/**
+ * Interface for payment service needs approvement
+ * @package professionalweb\payment\contracts
+ */
 interface PaymentApprove
 {
+    public const STATUS_APPROVED = 'approved';
+
+    public const STATUS_DECLINED = 'declined';
+
+    public const STATUS_PENDING = 'pending';
+
     /**
      * Approve transaction by id
      *
@@ -9,7 +19,7 @@ interface PaymentApprove
      *
      * @return bool
      */
-    public function approveTransaction($id);
+    public function approveTransaction($id): bool;
 
     /**
      * Get transaction status
@@ -18,5 +28,5 @@ interface PaymentApprove
      *
      * @return string
      */
-    public function getTransactionStatus($id);
+    public function getTransactionStatus($id): string;
 }
