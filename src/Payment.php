@@ -516,4 +516,74 @@ class Payment implements PaymentFacade
     {
         return $this->driverOptions[$driver] ?? [];
     }
+
+    /**
+     * Get payment currency
+     *
+     * @return string
+     */
+    public function getCurrency(): string
+    {
+        return $this->getCurrentDriver()->getCurrency();
+    }
+
+    /**
+     * Get card type. Visa, MC etc
+     *
+     * @return string
+     */
+    public function getCardType(): string
+    {
+        return $this->getCurrentDriver()->getCardType();
+    }
+
+    /**
+     * Get card expiration date
+     *
+     * @return string
+     */
+    public function getCardExpDate(): string
+    {
+        return $this->getCurrentDriver()->getCardExpDate();
+    }
+
+    /**
+     * Get cardholder name
+     *
+     * @return string
+     */
+    public function getCardUserName(): string
+    {
+        return $this->getCurrentDriver()->getCardUserName();
+    }
+
+    /**
+     * Get card issuer
+     *
+     * @return string
+     */
+    public function getIssuer(): string
+    {
+        return $this->getCurrentDriver()->getIssuer();
+    }
+
+    /**
+     * Get e-mail
+     *
+     * @return string
+     */
+    public function getEmail(): string
+    {
+        return $this->getCurrentDriver()->getEmail();
+    }
+
+    /**
+     * Get payment type. "GooglePay" for example
+     *
+     * @return string
+     */
+    public function getPaymentType(): string
+    {
+        return $this->getCurrentDriver()->getPaymentType();
+    }
 }

@@ -192,6 +192,55 @@ interface PayService
     public function getDateTime(): string;
 
     /**
+     * Get payment currency
+     *
+     * @return string
+     */
+    public function getCurrency(): string;
+
+    /**
+     * Get card type. Visa, MC etc
+     *
+     * @return string
+     */
+    public function getCardType(): string;
+
+    /**
+     * Get card expiration date
+     *
+     * @return string
+     */
+    public function getCardExpDate(): string;
+
+    /**
+     * Get cardholder name
+     *
+     * @return string
+     */
+    public function getCardUserName(): string;
+
+    /**
+     * Get card issuer
+     *
+     * @return string
+     */
+    public function getIssuer(): string;
+
+    /**
+     * Get e-mail
+     *
+     * @return string
+     */
+    public function getEmail(): string;
+
+    /**
+     * Get payment type. "GooglePay" for example
+     *
+     * @return string
+     */
+    public function getPaymentType(): string;
+
+    /**
      * Set transport/protocol wrapper
      *
      * @param PayProtocol $protocol
