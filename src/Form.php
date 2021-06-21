@@ -29,7 +29,7 @@ class Form implements IForm
      */
     private $fields = [];
 
-    public function __construct($url = '', $method = 'post')
+    public function __construct(string $url = '', string $method = 'post')
     {
         $this->setUrl($url)->setMethod($method);
     }
@@ -41,7 +41,7 @@ class Form implements IForm
      *
      * @return $this
      */
-    public function setUrl($url)
+    public function setUrl(string $url): self
     {
         $this->url = $url;
 
@@ -55,7 +55,7 @@ class Form implements IForm
      *
      * @return $this
      */
-    public function setMethod($method)
+    public function setMethod(string $method): self
     {
         $this->method = $method;
 
@@ -70,7 +70,7 @@ class Form implements IForm
      *
      * @return $this
      */
-    public function addField($name, $value = '')
+    public function addField(string $name, $value = ''): self
     {
         $this->fields[$name] = $value;
 
@@ -84,7 +84,7 @@ class Form implements IForm
      *
      * @return $this
      */
-    public function setField(array $fields)
+    public function setField(array $fields): self
     {
         $this->fields = $fields;
 
@@ -96,7 +96,7 @@ class Form implements IForm
      *
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         $result = '<form method="' . $this->getMethod() . '" action="' . $this->getAction() . '">' . "\r\n";
 
@@ -112,7 +112,7 @@ class Form implements IForm
      *
      * @return string
      */
-    public function renderFields()
+    public function renderFields(): string
     {
         $result = '';
         foreach ($this->fields as $field => $value) {
@@ -127,7 +127,7 @@ class Form implements IForm
      *
      * @return string
      */
-    public function getAction()
+    public function getAction(): string
     {
         return $this->url;
     }
@@ -137,7 +137,7 @@ class Form implements IForm
      *
      * @return string
      */
-    public function getMethod()
+    public function getMethod(): string
     {
         return $this->method;
     }

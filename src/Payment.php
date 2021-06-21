@@ -1,7 +1,8 @@
 <?php namespace professionalweb\payment;
 
-use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Response;
 use professionalweb\payment\contracts\Form;
+use professionalweb\payment\contracts\Receipt;
 use professionalweb\payment\contracts\PayService;
 use professionalweb\payment\contracts\PayProtocol;
 use professionalweb\payment\contracts\PaymentFacade;
@@ -20,6 +21,13 @@ class Payment implements PaymentFacade
     private $drivers = [];
 
     /**
+     * Driver options
+     *
+     * @var array
+     */
+    private $driverOptions = [];
+
+    /**
      * Current driver
      *
      * @var PayService
@@ -36,28 +44,29 @@ class Payment implements PaymentFacade
     /**
      * Pay
      *
-     * @param int       $orderId
-     * @param int       $paymentId
-     * @param float     $amount
-     * @param string    $currency
-     * @param string    $successReturnUrl
-     * @param string    $failReturnUrl
-     * @param string    $description
-     * @param array     $extraParams
-     * @param Arrayable $receipt
+     * @param int     $orderId
+     * @param int     $paymentId
+     * @param float   $amount
+     * @param string  $currency
+     * @param string  $paymentType
+     * @param string  $successReturnUrl
+     * @param string  $failReturnUrl
+     * @param string  $description
+     * @param array   $extraParams
+     * @param Receipt $receipt
      *
      * @return string
      */
     public function getPaymentLink($orderId,
                                    $paymentId,
-                                   $amount,
-                                   $currency = self::CURRENCY_RUR,
-                                   $paymentType = self::PAYMENT_TYPE_CARD,
-                                   $successReturnUrl = '',
-                                   $failReturnUrl = '',
-                                   $description = '',
-                                   $extraParams = [],
-                                   $receipt = null)
+                                   float $amount,
+                                   string $currency = self::CURRENCY_RUR,
+                                   string $paymentType = self::PAYMENT_TYPE_CARD,
+                                   string $successReturnUrl = '',
+                                   string $failReturnUrl = '',
+                                   string $description = '',
+                                   array $extraParams = [],
+                                   Receipt $receipt = null): string
     {
         return $this->getCurrentDriver()->getPaymentLink($orderId,
             $paymentId,
@@ -78,7 +87,7 @@ class Payment implements PaymentFacade
      *
      * @return bool
      */
-    public function validate($data)
+    public function validate(array $data): bool
     {
         return $this->getCurrentDriver()->validate($data);
     }
@@ -91,7 +100,7 @@ class Payment implements PaymentFacade
      *
      * @return $this
      */
-    public function addDriver($name, $className)
+    public function addDriver(string $name, string $className): self
     {
         $this->drivers[$name] = $className;
 
@@ -105,7 +114,7 @@ class Payment implements PaymentFacade
      *
      * @return $this
      */
-    public function setDrivers(array $drivers)
+    public function setDrivers(array $drivers): self
     {
         $this->drivers = $drivers;
 
@@ -117,7 +126,7 @@ class Payment implements PaymentFacade
      *
      * @return array
      */
-    public function getDrivers()
+    public function getDrivers(): array
     {
         return $this->drivers;
     }
@@ -127,9 +136,9 @@ class Payment implements PaymentFacade
      *
      * @param string $name
      *
-     * @return mixed
+     * @return null|string
      */
-    public function getDriver($name)
+    public function getDriver($name): ?string
     {
         return $this->getDrivers()[$name];
     }
@@ -141,7 +150,7 @@ class Payment implements PaymentFacade
      *
      * @return $this
      */
-    public function setCurrentDriver($name)
+    public function setCurrentDriver(string $name): PayService
     {
         $this->currentDriverName = $name;
 
@@ -157,9 +166,9 @@ class Payment implements PaymentFacade
      *
      * @return $this
      */
-    protected function makeCurrentDriver($name)
+    protected function makeCurrentDriver(string $name): PayService
     {
-        $this->currentDriver = \App::make($this->getDriver($name), [
+        $this->currentDriver = app($this->getDriver($name), [
             'config' => config('payment.' . $name),
         ]);
 
@@ -171,7 +180,7 @@ class Payment implements PaymentFacade
      *
      * @return PayService
      */
-    public function getCurrentDriver()
+    public function getCurrentDriver(): PayService
     {
         return $this->currentDriver;
     }
@@ -181,7 +190,7 @@ class Payment implements PaymentFacade
      *
      * @return string
      */
-    public function getDriverName()
+    public function getDriverName(): string
     {
         return $this->currentDriverName;
     }
@@ -191,9 +200,9 @@ class Payment implements PaymentFacade
      *
      * @param string $name
      *
-     * @return Payment
+     * @return PayService
      */
-    public function driver($name)
+    public function driver($name): PayService
     {
         return $this->setCurrentDriver($name);
     }
@@ -205,7 +214,7 @@ class Payment implements PaymentFacade
      *
      * @return $this
      */
-    public function setResponse($data)
+    public function setResponse(array $data): PayService
     {
         return $this->getCurrentDriver()->setResponse($data);
     }
@@ -215,7 +224,7 @@ class Payment implements PaymentFacade
      *
      * @return string
      */
-    public function getOrderId()
+    public function getOrderId(): string
     {
         return $this->getCurrentDriver()->getOrderId();
     }
@@ -225,7 +234,7 @@ class Payment implements PaymentFacade
      *
      * @return string
      */
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->getCurrentDriver()->getStatus();
     }
@@ -235,7 +244,7 @@ class Payment implements PaymentFacade
      *
      * @return bool
      */
-    public function isSuccess()
+    public function isSuccess(): bool
     {
         return $this->getCurrentDriver()->isSuccess();
     }
@@ -245,7 +254,7 @@ class Payment implements PaymentFacade
      *
      * @return string
      */
-    public function getTransactionId()
+    public function getTransactionId(): string
     {
         return $this->getCurrentDriver()->getTransactionId();
     }
@@ -255,7 +264,7 @@ class Payment implements PaymentFacade
      *
      * @return float
      */
-    public function getAmount()
+    public function getAmount(): float
     {
         return $this->getCurrentDriver()->getAmount();
     }
@@ -263,9 +272,9 @@ class Payment implements PaymentFacade
     /**
      * Get error code
      *
-     * @return int
+     * @return string
      */
-    public function getErrorCode()
+    public function getErrorCode(): string
     {
         return $this->getCurrentDriver()->getErrorCode();
     }
@@ -275,7 +284,7 @@ class Payment implements PaymentFacade
      *
      * @return string
      */
-    public function getProvider()
+    public function getProvider(): string
     {
         return $this->getCurrentDriver()->getProvider();
     }
@@ -285,7 +294,7 @@ class Payment implements PaymentFacade
      *
      * @return string
      */
-    public function getPan()
+    public function getPan(): string
     {
         return $this->getCurrentDriver()->getPan();
     }
@@ -295,7 +304,7 @@ class Payment implements PaymentFacade
      *
      * @return string
      */
-    public function getDateTime()
+    public function getDateTime(): string
     {
         return $this->getCurrentDriver()->getDateTime();
     }
@@ -307,7 +316,7 @@ class Payment implements PaymentFacade
      *
      * @return $this
      */
-    public function setTransport(PayProtocol $protocol)
+    public function setTransport(PayProtocol $protocol): PayService
     {
         return $this;
     }
@@ -317,9 +326,9 @@ class Payment implements PaymentFacade
      *
      * @param int $errorCode
      *
-     * @return string
+     * @return Response
      */
-    public function getNotificationResponse($errorCode = null)
+    public function getNotificationResponse(int $errorCode = null): Response
     {
         return $this->getCurrentDriver()->getNotificationResponse($errorCode);
     }
@@ -329,9 +338,9 @@ class Payment implements PaymentFacade
      *
      * @param int $errorCode
      *
-     * @return string
+     * @return Response
      */
-    public function getCheckResponse($errorCode = null)
+    public function getCheckResponse(int $errorCode = null): Response
     {
         return $this->getCurrentDriver()->getCheckResponse($errorCode);
     }
@@ -341,7 +350,7 @@ class Payment implements PaymentFacade
      *
      * @return int
      */
-    public function getLastError()
+    public function getLastError(): int
     {
         return $this->getCurrentDriver()->getLastError();
     }
@@ -353,7 +362,7 @@ class Payment implements PaymentFacade
      *
      * @return mixed
      */
-    public function getParam($name)
+    public function getParam(string $name)
     {
         return $this->getCurrentDriver()->getParam($name);
     }
@@ -363,7 +372,7 @@ class Payment implements PaymentFacade
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->getCurrentDriver()->getName();
     }
@@ -373,7 +382,7 @@ class Payment implements PaymentFacade
      *
      * @return string
      */
-    public function getPaymentId()
+    public function getPaymentId(): string
     {
         return $this->getCurrentDriver()->getPaymentId();
     }
@@ -384,11 +393,28 @@ class Payment implements PaymentFacade
      * @param string $alias
      * @param string $className
      *
+     * @param array  $options
+     *
      * @return PayService
      */
-    public function registerDriver($alias, $className)
+    public function registerDriver(string $alias, string $className, array $options = []): PayService
     {
-        return $this->addDriver($alias, $className);
+        return $this->addDriver($alias, $className)->addDriverOptions($alias, $options);
+    }
+
+    /**
+     * Set options for driver
+     *
+     * @param string $alias
+     * @param array  $options
+     *
+     * @return PayService
+     */
+    protected function addDriverOptions(string $alias, array $options): PayService
+    {
+        $this->driverOptions[$alias] = $options;
+
+        return $this;
     }
 
     /**
@@ -396,9 +422,9 @@ class Payment implements PaymentFacade
      *
      * @return array
      */
-    public function drivers()
+    public function drivers(): array
     {
-        return array_keys($this->drivers);
+        return $this->drivers;
     }
 
     /**
@@ -407,7 +433,7 @@ class Payment implements PaymentFacade
      *
      * @return bool
      */
-    public function needForm()
+    public function needForm(): bool
     {
         return $this->getCurrentDriver()->needForm();
     }
@@ -415,29 +441,29 @@ class Payment implements PaymentFacade
     /**
      * Generate payment form
      *
-     * @param int       $orderId
-     * @param int       $paymentId
-     * @param float     $amount
-     * @param string    $currency
-     * @param string    $paymentType
-     * @param string    $successReturnUrl
-     * @param string    $failReturnUrl
-     * @param string    $description
-     * @param array     $extraParams
-     * @param Arrayable $receipt
+     * @param int     $orderId
+     * @param int     $paymentId
+     * @param float   $amount
+     * @param string  $currency
+     * @param string  $paymentType
+     * @param string  $successReturnUrl
+     * @param string  $failReturnUrl
+     * @param string  $description
+     * @param array   $extraParams
+     * @param Receipt $receipt
      *
      * @return Form
      */
     public function getPaymentForm($orderId,
                                    $paymentId,
-                                   $amount,
-                                   $currency = self::CURRENCY_RUR,
-                                   $paymentType = self::PAYMENT_TYPE_CARD,
-                                   $successReturnUrl = '',
-                                   $failReturnUrl = '',
-                                   $description = '',
-                                   $extraParams = [],
-                                   $receipt = null)
+                                   float $amount,
+                                   string $currency = self::CURRENCY_RUR,
+                                   string $paymentType = self::PAYMENT_TYPE_CARD,
+                                   string $successReturnUrl = '',
+                                   string $failReturnUrl = '',
+                                   string $description = '',
+                                   array $extraParams = [],
+                                   Receipt $receipt = null): Form
     {
         return $this->getCurrentDriver()->getPaymentForm($orderId,
             $paymentId,
@@ -449,5 +475,115 @@ class Payment implements PaymentFacade
             $description,
             $extraParams,
             $receipt);
+    }
+
+    /**
+     * Get pay service options
+     *
+     * @return array
+     */
+    public static function getOptions(): array
+    {
+        return app(self::class)->getDriverOptions();
+    }
+
+    /**
+     * Build driber by name
+     *
+     * @param string $driver
+     *
+     * @return null|PayService
+     */
+    public function driverInstance(string $driver): ?PayService
+    {
+        if (($driverClass = $this->getDriver($driver)) !== null) {
+            return app($driverClass, [
+                'config' => config('payment.' . $driverClass),
+            ]);
+        }
+
+        return null;
+    }
+
+    /**
+     * Get driver options
+     *
+     * @param string|null $driver
+     *
+     * @return array
+     */
+    public function getDriverOptions(string $driver = null): array
+    {
+        return $this->driverOptions[$driver] ?? [];
+    }
+
+    /**
+     * Get payment currency
+     *
+     * @return string
+     */
+    public function getCurrency(): string
+    {
+        return $this->getCurrentDriver()->getCurrency();
+    }
+
+    /**
+     * Get card type. Visa, MC etc
+     *
+     * @return string
+     */
+    public function getCardType(): string
+    {
+        return $this->getCurrentDriver()->getCardType();
+    }
+
+    /**
+     * Get card expiration date
+     *
+     * @return string
+     */
+    public function getCardExpDate(): string
+    {
+        return $this->getCurrentDriver()->getCardExpDate();
+    }
+
+    /**
+     * Get cardholder name
+     *
+     * @return string
+     */
+    public function getCardUserName(): string
+    {
+        return $this->getCurrentDriver()->getCardUserName();
+    }
+
+    /**
+     * Get card issuer
+     *
+     * @return string
+     */
+    public function getIssuer(): string
+    {
+        return $this->getCurrentDriver()->getIssuer();
+    }
+
+    /**
+     * Get e-mail
+     *
+     * @return string
+     */
+    public function getEmail(): string
+    {
+        return $this->getCurrentDriver()->getEmail();
+    }
+
+    /**
+     * Get payment type. "GooglePay" for example
+     *
+     * @return string
+     */
+    public function getPaymentType(): string
+    {
+        return $this->getCurrentDriver()->getPaymentType();
     }
 }
