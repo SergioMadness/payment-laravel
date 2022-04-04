@@ -3,26 +3,17 @@ Payment provider for [Laravel](https://laravel.com/)
 
 [![Latest Stable Version](https://poser.pugx.org/professionalweb/payment-laravel/v/stable)](https://packagist.org/packages/professionalweb/payment-laravel)
 [![Code Climate](https://codeclimate.com/github/SergioMadness/payment-laravel/badges/gpa.svg)](https://codeclimate.com/github/SergioMadness/payment-laravel)
-[![Dependency Status](https://www.versioneye.com/user/projects/573c5c00ce8d0e004130bd62/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/573c5c00ce8d0e004130bd62)
 [![License](https://poser.pugx.org/professionalweb/payment-laravel/license)](https://packagist.org/packages/professionalweb/payment-laravel)
 [![Latest Unstable Version](https://poser.pugx.org/professionalweb/payment-laravel/v/unstable)](https://packagist.org/packages/professionalweb/payment-laravel)
-
-Project structure
--------------------
-```
-contracts/          Abstractions
-facades/            Payment facade
-```
 
 
 Requirements
 ------------
- - PHP 5.5+
+ - PHP 7.2+
 
 Dependencies
 ------------
- - [alcohol/iso4217](https://github.com/alcohol/iso4217)
- - [illuminate/support](https://github.com/illuminate/support)
+ - [laravel/laravel](https://github.com/laravel/laravel)
 
 
 Installation
@@ -34,88 +25,9 @@ composer require professionalweb/payment-laravel "dev-master"
 Alternatively you can add the following to the `require` section in your `composer.json` manually:
 
 ```json
-"professionalweb/payment-laravel": "^2.2"
+"professionalweb/payment-laravel": "^4.0"
 ```
 Run `composer update` afterwards.
-
-
-Initialization
---------------
-##config/app.php
-```php
-<?php
-return [
-    'providers' => [
-        ...
-        \professionalweb\payment\PaymentProvider::class,
-        ...
-    ],
-];
-```
-
-If you need only one specific payment provider:
-
-PayOnline:
-```php
-return [
-    'providers' => [
-        ...
-        \professionalweb\payment\PayOnlineProvider::class,
-        ...
-    ],
-];
-```
-
-Tinkoff:
-```php
-return [
-    'providers' => [
-        ...
-        \professionalweb\payment\TinkoffProvider::class,
-        ...
-    ],
-];
-```
-
-Yandex.Kassa:
-```php
-return [
-    'providers' => [
-        ...
-        \professionalweb\payment\YandexProvider::class,
-        ...
-    ],
-];
-```
-
-##config/payment.php
-```php
-<?php
-return [
-    'default_driver' => env('DEFAULT_PAYMENT_SYSTEM', \professionalweb\payment\PaymentProvider::PAYMENT_TINKOFF),
-    'tinkoff'        => [
-        'merchantId' => env('TINKOFF_MERCHANT_ID'),
-        'secretKey'  => env('TINKOFF_SECRET_KEY'),
-        'successURL' => env('TINKOFF_SUCCESS_URL', '/'),
-        'failURL'    => env('TINKOFF_FAIL_URL', '/'),
-        'apiUrl'     => env('TINKOFF_API_URL', 'https://securepay.tinkoff.ru/rest/'),
-    ],
-    'payonline'      => [
-        'merchantId' => env('PAYONLINE_MERCHANT_ID'),
-        'secretKey'  => env('PAYONLINE_SECRET_KEY'),
-        'successURL' => env('PAYONLINE_SUCCESS_URL', '/'),
-        'failURL'    => env('PAYONLINE_FAIL_URL', '/'),
-    ],
-    'yandex'      => [
-        'merchantId' => env('YANDEX_SHOP_ID'),
-        'scid'       => env('YANDEX_SCID'),
-        'secretKey'  => env('YANDEX_SECRET_KEY'),
-        'successURL' => env('YANDEX_SUCCESS_URL', '/'),
-        'failURL'    => env('YANDEX_FAIL_URL', '/'),
-        'isTest'     => false,
-    ],
-];
-```
 
 Using
 -----------
@@ -129,8 +41,9 @@ public function action(PayService $paymentService) {
             $payment->id,
             $payment->amount,
             $payment->currency,
-            $successfulPaymentReturnUrl, //Tinkoff doesn't need it
-            $failedPaymentReturnUrl, //Tinkoff doesn't need it
+            PayService::PAYMENT_TYPE_CARD
+            $successfulPaymentReturnUrl,
+            $failedPaymentReturnUrl,
             $description
         );
     );

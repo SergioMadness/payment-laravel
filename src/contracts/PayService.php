@@ -1,7 +1,6 @@
 <?php namespace professionalweb\payment\contracts;
 
 use Illuminate\Http\Response;
-use Illuminate\Contracts\Support\Arrayable;
 
 /**
  * Interface payment service
@@ -12,56 +11,62 @@ interface PayService
     /**
      * Rubles
      */
-    const CURRENCY_RUR = 'RUB';
-    const CURRENCY_RUR_ISO = 643;
+    public const CURRENCY_RUR = 'RUB';
+    public const CURRENCY_RUR_ISO = 643;
 
-    const CURRENCY_UAH = 'UAH';
-    const CURRENCY_UAH_ISO = 980;
+    public const CURRENCY_UAH = 'UAH';
+    public const CURRENCY_UAH_ISO = 980;
 
-    const CURRENCY_KZT = 'KZT';
-    const CURRENCY_KZT_ISO = 398;
+    public const CURRENCY_KZT = 'KZT';
+    public const CURRENCY_KZT_ISO = 398;
+    
+    public const PAYMENT_TYPE_CARD = 'card';
+    public const PAYMENT_TYPE_CASH = 'cash';
+    public const PAYMENT_TYPE_MOBILE = 'mobile';
+    public const PAYMENT_TYPE_QIWI = 'qiwi';
+    public const PAYMENT_TYPE_SBERBANK = 'sberbank';
+    public const PAYMENT_TYPE_YANDEX_MONEY = 'yandex.money';
+    public const PAYMENT_TYPE_ALFABANK = 'alfabank';
 
-    const PAYMENT_TYPE_CARD = 'card';
-    const PAYMENT_TYPE_CASH = 'cash';
-    const PAYMENT_TYPE_MOBILE = 'mobile';
-    const PAYMENT_TYPE_QIWI = 'qiwi';
-    const PAYMENT_TYPE_SBERBANK = 'sberbank';
-    const PAYMENT_TYPE_YANDEX_MONEY = 'yandex.money';
-    const PAYMENT_TYPE_ALFABANK = 'alfabank';
+    public const RESPONSE_SUCCESS = 1;
+    public const RESPONSE_ERROR = 0;
+    public const RESPONSE_ERROR_WRONG_ORDER = 2;
+    public const RESPONSE_ERROR_WRONG_PAYMENT = 3;
+    public const RESPONSE_ERROR_WRONG_AMOUNT = 4;
 
     /**
      * Get name of payment service
      *
      * @return string
      */
-    public function getName();
+    public function getName(): string;
 
     /**
      * Pay
      *
-     * @param int       $orderId
-     * @param int       $paymentId
-     * @param float     $amount
-     * @param string    $currency
-     * @param string    $paymentType
-     * @param string    $successReturnUrl
-     * @param string    $failReturnUrl
-     * @param string    $description
-     * @param array     $extraParams
-     * @param Arrayable $receipt
+     * @param mixed   $orderId
+     * @param mixed   $paymentId
+     * @param float   $amount
+     * @param string  $currency
+     * @param string  $paymentType
+     * @param string  $successReturnUrl
+     * @param string  $failReturnUrl
+     * @param string  $description
+     * @param array   $extraParams
+     * @param Receipt $receipt
      *
      * @return string
      */
     public function getPaymentLink($orderId,
                                    $paymentId,
-                                   $amount,
-                                   $currency = self::CURRENCY_RUR,
-                                   $paymentType = self::PAYMENT_TYPE_CARD,
-                                   $successReturnUrl = '',
-                                   $failReturnUrl = '',
-                                   $description = '',
-                                   $extraParams = [],
-                                   $receipt = null);
+                                   float $amount,
+                                   string $currency = self::CURRENCY_RUR,
+                                   string $paymentType = self::PAYMENT_TYPE_CARD,
+                                   string $successReturnUrl = '',
+                                   string $failReturnUrl = '',
+                                   string $description = '',
+                                   array $extraParams = [],
+                                   Receipt $receipt = null): string;
 
     /**
      * Payment system need form
@@ -69,43 +74,43 @@ interface PayService
      *
      * @return bool
      */
-    public function needForm();
+    public function needForm(): bool;
 
     /**
      * Generate payment form
      *
-     * @param int       $orderId
-     * @param int       $paymentId
-     * @param float     $amount
-     * @param string    $currency
-     * @param string    $paymentType
-     * @param string    $successReturnUrl
-     * @param string    $failReturnUrl
-     * @param string    $description
-     * @param array     $extraParams
-     * @param Arrayable $receipt
+     * @param mixed   $orderId
+     * @param mixed   $paymentId
+     * @param float   $amount
+     * @param string  $currency
+     * @param string  $paymentType
+     * @param string  $successReturnUrl
+     * @param string  $failReturnUrl
+     * @param string  $description
+     * @param array   $extraParams
+     * @param Receipt $receipt
      *
-     * @return string
+     * @return Form
      */
     public function getPaymentForm($orderId,
                                    $paymentId,
-                                   $amount,
-                                   $currency = self::CURRENCY_RUR,
-                                   $paymentType = self::PAYMENT_TYPE_CARD,
-                                   $successReturnUrl = '',
-                                   $failReturnUrl = '',
-                                   $description = '',
-                                   $extraParams = [],
-                                   $receipt = null);
+                                   float $amount,
+                                   string $currency = self::CURRENCY_RUR,
+                                   string $paymentType = self::PAYMENT_TYPE_CARD,
+                                   string $successReturnUrl = '',
+                                   string $failReturnUrl = '',
+                                   string $description = '',
+                                   array $extraParams = [],
+                                   Receipt $receipt = null): Form;
 
     /**
      * Validate request
      *
-     * @param mixed $data
+     * @param array $data
      *
      * @return bool
      */
-    public function validate($data);
+    public function validate(array $data): bool;
 
     /**
      * Parse notification
@@ -114,77 +119,126 @@ interface PayService
      *
      * @return $this
      */
-    public function setResponse($data);
+    public function setResponse(array $data): self;
 
     /**
      * Get order ID
      *
      * @return string
      */
-    public function getOrderId();
+    public function getOrderId(): string;
 
     /**
      * Get payment id
      *
      * @return string
      */
-    public function getPaymentId();
+    public function getPaymentId(): string;
 
     /**
      * Get operation status
      *
      * @return string
      */
-    public function getStatus();
+    public function getStatus(): string;
 
     /**
      * Is payment succeed
      *
      * @return bool
      */
-    public function isSuccess();
+    public function isSuccess(): bool;
 
     /**
      * Get transaction ID
      *
      * @return string
      */
-    public function getTransactionId();
+    public function getTransactionId(): string;
 
     /**
      * Get transaction amount
      *
      * @return float
      */
-    public function getAmount();
+    public function getAmount(): float;
 
     /**
      * Get error code
      *
-     * @return int
+     * @return string
      */
-    public function getErrorCode();
+    public function getErrorCode(): string;
 
     /**
      * Get payment provider
      *
      * @return string
      */
-    public function getProvider();
+    public function getProvider(): string;
 
     /**
      * Get PAN
      *
      * @return string
      */
-    public function getPan();
+    public function getPan(): string;
 
     /**
      * Get payment datetime
      *
      * @return string
      */
-    public function getDateTime();
+    public function getDateTime(): string;
+
+    /**
+     * Get payment currency
+     *
+     * @return string
+     */
+    public function getCurrency(): string;
+
+    /**
+     * Get card type. Visa, MC etc
+     *
+     * @return string
+     */
+    public function getCardType(): string;
+
+    /**
+     * Get card expiration date
+     *
+     * @return string
+     */
+    public function getCardExpDate(): string;
+
+    /**
+     * Get cardholder name
+     *
+     * @return string
+     */
+    public function getCardUserName(): string;
+
+    /**
+     * Get card issuer
+     *
+     * @return string
+     */
+    public function getIssuer(): string;
+
+    /**
+     * Get e-mail
+     *
+     * @return string
+     */
+    public function getEmail(): string;
+
+    /**
+     * Get payment type. "GooglePay" for example
+     *
+     * @return string
+     */
+    public function getPaymentType(): string;
 
     /**
      * Set transport/protocol wrapper
@@ -193,7 +247,7 @@ interface PayService
      *
      * @return $this
      */
-    public function setTransport(PayProtocol $protocol);
+    public function setTransport(PayProtocol $protocol): self;
 
     /**
      * Prepare response on notification request
@@ -202,7 +256,7 @@ interface PayService
      *
      * @return Response
      */
-    public function getNotificationResponse($errorCode = null);
+    public function getNotificationResponse(int $errorCode = null): Response;
 
     /**
      * Prepare response on check request
@@ -211,14 +265,14 @@ interface PayService
      *
      * @return Response
      */
-    public function getCheckResponse($errorCode = null);
+    public function getCheckResponse(int $errorCode = null): Response;
 
     /**
      * Get last error code
      *
      * @return int
      */
-    public function getLastError();
+    public function getLastError(): int;
 
     /**
      * Get param by name
@@ -227,5 +281,12 @@ interface PayService
      *
      * @return mixed
      */
-    public function getParam($name);
+    public function getParam(string $name);
+
+    /**
+     * Get pay service options
+     *
+     * @return array
+     */
+    public static function getOptions(): array;
 }

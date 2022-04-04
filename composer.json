@@ -32,6 +32,7 @@
     "source": "https://github.com/SergioMadness/payment-laravel/releases"
   },
   "require": {
+    "php": "^7.1",
     "illuminate/support": "5.*"
   },
   "require-dev": {
@@ -47,6 +48,15 @@
   "suggest": {
     "professionalweb/payment-laravel-payonline": "Driver for PayOnline",
     "professionalweb/payment-laravel-tinkoff": "Driver for Tinkoff",
-    "professionalweb/payment-laravel-yandex": "Driver for Kassa.Yandex"
+    "professionalweb/payment-laravel-yandex": "Driver for Kassa.Yandex",
+    "professionalweb/payment-laravel-cnp": "Driver for Processing.kz",
+    "professionalweb/payment-laravel-upc": "Driver for UA processing"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "professionalweb\\payment\\PaymentProvider"
+      ]
+    }
   }
 }

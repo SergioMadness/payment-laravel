@@ -11,26 +11,26 @@ interface Form
      *
      * @return string
      */
-    public function render();
+    public function render(): string;
 
     /**
      * Render fields
      *
      * @return string
      */
-    public function renderFields();
+    public function renderFields(): string;
 
     /**
      * Form action
      *
      * @return string
      */
-    public function getAction();
+    public function getAction(): string;
 
     /**
      * Get form method
      *
      * @return string
      */
-    public function getMethod();
+    public function getMethod(): string;
 }
