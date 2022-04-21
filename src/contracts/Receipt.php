@@ -18,9 +18,9 @@ interface Receipt extends Arrayable
     /**
      * Get tax system
      *
-     * @return int
+     * @return int|string
      */
-    public function getTaxSystem(): int;
+    public function getTaxSystem();
 
     /**
      * Get all items in receipt

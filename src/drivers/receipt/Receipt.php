@@ -17,7 +17,7 @@ abstract class Receipt implements IReceipt
      * Параметр необходим, только если у вас несколько систем налогообложения.
      * В остальных случаях не передается.
      *
-     * @var int
+     * @var int|string
      */
     private $taxSystem;
 
@@ -33,9 +33,9 @@ abstract class Receipt implements IReceipt
      *
      * @param string     $contact
      * @param array|null $items
-     * @param int        $taxSystem
+     * @param int|string $taxSystem
      */
-    public function __construct(string $contact = null, array $items = [], int $taxSystem = null)
+    public function __construct(string $contact = null, array $items = [], $taxSystem = null)
     {
         $this->setContact($contact)->setItems($items)->setTaxSystem($taxSystem);
     }
@@ -67,9 +67,9 @@ abstract class Receipt implements IReceipt
     /**
      * Get tax system
      *
-     * @return int
+     * @return int|string
      */
-    public function getTaxSystem(): int
+    public function getTaxSystem()
     {
         return $this->taxSystem;
     }
@@ -77,11 +77,11 @@ abstract class Receipt implements IReceipt
     /**
      * Set tax system
      *
-     * @param int $taxSystem
+     * @param int|string $taxSystem
      *
      * @return $this
      */
-    public function setTaxSystem(int $taxSystem): self
+    public function setTaxSystem($taxSystem): self
     {
         $this->taxSystem = $taxSystem;
 
