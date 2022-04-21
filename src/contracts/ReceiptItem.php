@@ -32,9 +32,9 @@ interface ReceiptItem extends Arrayable
     /**
      * Get tax
      *
-     * @return int
+     * @return mixed
      */
-    public function getTax(): int;
+    public function getTax();
 
     /**
      * Get item name

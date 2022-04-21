@@ -46,10 +46,10 @@ abstract class ReceiptItem implements IReceiptItem
      * @param string $name
      * @param int    $qty
      * @param float  $price
-     * @param int    $tax
+     * @param mixed    $tax
      * @param string $currency
      */
-    public function __construct(string $name = null, int $qty = null, float $price = null, int $tax = null, string $currency = 'RUR')
+    public function __construct(string $name = null, int $qty = null, float $price = null, $tax = null, string $currency = 'RUR')
     {
         $this->setName($name)->setQty($qty)->setPrice($price)->setTax($tax)->setCurrency($currency);
     }
@@ -129,9 +129,9 @@ abstract class ReceiptItem implements IReceiptItem
     /**
      * Get tax
      *
-     * @return int
+     * @return mixed
      */
-    public function getTax(): int
+    public function getTax()
     {
         return $this->tax;
     }
@@ -139,11 +139,11 @@ abstract class ReceiptItem implements IReceiptItem
     /**
      * Set tax
      *
-     * @param int $tax
+     * @param mixed $tax
      *
      * @return $this
      */
-    public function setTax(int $tax): self
+    public function setTax($tax): self
     {
         $this->tax = $tax;
 
