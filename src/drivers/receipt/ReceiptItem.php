@@ -49,7 +49,7 @@ abstract class ReceiptItem implements IReceiptItem
      * @param mixed    $tax
      * @param string $currency
      */
-    public function __construct(string $name = null, int $qty = null, float $price = null, $tax = null, string $currency = 'RUR')
+    public function __construct(string $name = null, int $qty = null, float $price = null, $tax = null, string $currency = 'RUB')
     {
         $this->setName($name)->setQty($qty)->setPrice($price)->setTax($tax)->setCurrency($currency);
     }
