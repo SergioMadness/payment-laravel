@@ -32,8 +32,7 @@
     "source": "https://github.com/SergioMadness/payment-laravel/releases"
   },
   "require": {
-    "php": "^7.1",
-    "illuminate/support": "5.*"
+    "php": ">=8.1"
   },
   "require-dev": {
   },
