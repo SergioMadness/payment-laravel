@@ -54,5 +54,5 @@ interface RecurringPaymentSchedule
      *
      * @return array|[]RecurringSchedule
      */
-    public function getAllSchedules(string $accountId = null): array;
+    public function getAllSchedules(?string $accountId = null): array;
 }

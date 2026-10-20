@@ -66,7 +66,7 @@ interface PayService
                                    string $failReturnUrl = '',
                                    string $description = '',
                                    array $extraParams = [],
-                                   Receipt $receipt = null): string;
+                                   ?Receipt $receipt = null): string;
 
     /**
      * Payment system need form
@@ -101,7 +101,7 @@ interface PayService
                                    string $failReturnUrl = '',
                                    string $description = '',
                                    array $extraParams = [],
-                                   Receipt $receipt = null): Form;
+                                   ?Receipt $receipt = null): Form;
 
     /**
      * Validate request
@@ -256,7 +256,7 @@ interface PayService
      *
      * @return Response
      */
-    public function getNotificationResponse(int $errorCode = null): Response;
+    public function getNotificationResponse(?int $errorCode = null): Response;
 
     /**
      * Prepare response on check request
@@ -265,7 +265,7 @@ interface PayService
      *
      * @return Response
      */
-    public function getCheckResponse(int $errorCode = null): Response;
+    public function getCheckResponse(?int $errorCode = null): Response;
 
     /**
      * Get last error code

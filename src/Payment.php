@@ -66,7 +66,7 @@ class Payment implements PaymentFacade
                                    string $failReturnUrl = '',
                                    string $description = '',
                                    array $extraParams = [],
-                                   Receipt $receipt = null): string
+                                   ?Receipt $receipt = null): string
     {
         return $this->getCurrentDriver()->getPaymentLink($orderId,
             $paymentId,
@@ -328,7 +328,7 @@ class Payment implements PaymentFacade
      *
      * @return Response
      */
-    public function getNotificationResponse(int $errorCode = null): Response
+    public function getNotificationResponse(?int $errorCode = null): Response
     {
         return $this->getCurrentDriver()->getNotificationResponse($errorCode);
     }
@@ -340,7 +340,7 @@ class Payment implements PaymentFacade
      *
      * @return Response
      */
-    public function getCheckResponse(int $errorCode = null): Response
+    public function getCheckResponse(?int $errorCode = null): Response
     {
         return $this->getCurrentDriver()->getCheckResponse($errorCode);
     }
@@ -463,7 +463,7 @@ class Payment implements PaymentFacade
                                    string $failReturnUrl = '',
                                    string $description = '',
                                    array $extraParams = [],
-                                   Receipt $receipt = null): Form
+                                   ?Receipt $receipt = null): Form
     {
         return $this->getCurrentDriver()->getPaymentForm($orderId,
             $paymentId,
@@ -512,7 +512,7 @@ class Payment implements PaymentFacade
      *
      * @return array
      */
-    public function getDriverOptions(string $driver = null): array
+    public function getDriverOptions(?string $driver = null): array
     {
         return $this->driverOptions[$driver] ?? [];
     }

@@ -64,5 +64,5 @@ interface PaymentFacade extends PayService
      *
      * @return array
      */
-    public function getDriverOptions(string $driver = null): array;
+    public function getDriverOptions(?string $driver = null): array;
 }

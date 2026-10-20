@@ -35,7 +35,7 @@ abstract class Receipt implements IReceipt
      * @param array|null $items
      * @param int|string $taxSystem
      */
-    public function __construct(string $contact = null, array $items = [], $taxSystem = null)
+    public function __construct(?string $contact = null, array $items = [], $taxSystem = null)
     {
         $this->setContact($contact)->setItems($items)->setTaxSystem($taxSystem);
     }
